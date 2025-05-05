@@ -1,4 +1,5 @@
-#include "philo.h"
+#include "../philo.h"
+
 int	main(int c, char **v)
 {
 	if (c < 5 || c > 6)
