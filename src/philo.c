@@ -3,11 +3,11 @@
 void	*philo_convertion(void *arg)
 {
 	t_philo	*philo = (t_philo *)arg;
-	printf("Philosopher [%d] created!\n", philo->ID);
+	printf("philosopher [%d] created!\n", philo->ID);
 	return (NULL);
 }
 
-int	init_data (t_data *data, char **v)
+int	init_data(t_data *data, char **v)
 {
 	int	i;
 
@@ -27,7 +27,7 @@ int	init_data (t_data *data, char **v)
 		free(data->threads);
 		return (1);
 	}
-	while (i <= data->nbr_of_philos)
+	while (i < data->nbr_of_philos)
 	{
 		data->philos[i].ID = i + 1;
 		i++;
@@ -35,11 +35,11 @@ int	init_data (t_data *data, char **v)
 	return (0);
 }
 
-int	philo_creation(t_data *data)
+int	philo_create(t_data *data)
 {
 	int	i;
-
 	i = 0;
+
 	while (i < data->nbr_of_philos)
 	{
 		if (pthread_create(&data->threads[i], NULL, philo_convertion, &data->philos[i]) != 0)
@@ -73,6 +73,7 @@ void	free_philo(t_data *data)
 
 int	main(int c, char **v)
 {
+	t_data	data = {0};
 	if (/*c < 5 || c > 6*/ c != 2)
 	{
 		printf(MSG);
@@ -84,6 +85,14 @@ int	main(int c, char **v)
 		// n x cada filo pracisa comer = (opcional), se for imposto, a simulação acaba 
 		  //quando o filo comer as x vezes impostas, se não utilizado, acaba quando todos morrem
 	}
-	
+	if (init_data(&data, v) != 0)
+		return (1);
+	if (philo_convertion(&data) != 0)
+	{
+		free_philo(&data);
+		return (1);
+	}
+	philo_wait(&data);
+	free_philo(&data);
 	return (0);
 }
