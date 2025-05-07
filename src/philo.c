@@ -52,6 +52,21 @@ int	philo_creation(t_data *data)
 	return (0);
 }
 
+void	philo_wait(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->nbr_of_philos)
+	{
+		if (pthread_join(data->threads[i], NULL) != 0)
+			printf("Error: failure in wait the thread [%d]!\n", i + 1);
+		i++;
+	}
+}
+
+
+
 int	main(int c, char **v)
 {
 	int			i;
