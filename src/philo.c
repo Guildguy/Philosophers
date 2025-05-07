@@ -7,6 +7,34 @@ void	*philo_creation(void *arg)
 	return (NULL);
 }
 
+int	init_data (t_data *data, char **v)
+{
+	int	i;
+
+	i = 0;
+	data->nbr_of_philos = atoi(v[1]);
+	if (data->nbr_of_philos <= 0)
+	{
+		printf("Error: must exist at least 1 philosopher!\n");
+		return (1);
+	}
+	data->philos = malloc(sizeof(t_philo) * data->nbr_of_philos);
+	data->threads = main(sizeof(pthread_t) * data->nbr_of_philos);
+	if (!data->philos || !data->threads)
+	{
+		printf("Error: failure to alocate memory!\n");
+		free(data->philos);
+		free(data->threads);
+		return (1);
+	}
+	while (i <= data->nbr_of_philos)
+	{
+		data->philos[i].ID = i + 1;
+		i++;
+	}
+	return (0);
+}
+
 int	main(int c, char **v)
 {
 	int			i;
