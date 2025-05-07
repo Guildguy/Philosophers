@@ -9,6 +9,18 @@
 # include <sys/types.h>
 # include <sys/wait.h> //waitpid
 
+typedef	struct	s_philo
+{
+	int	ID;
+}				t_philo;
+
+typedef struct	s_data
+{
+	int			nbr_of_philos; //nbr philo
+	t_philo		*philos; //phiklo arr
+	pthread_t	*threads; //thread arr
+}				t_data;
+
 
 
 # define MSG "ERROR: ./philo <number_of_philosophers> <time_to_die> \\
