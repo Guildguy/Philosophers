@@ -2,10 +2,8 @@
 
 void	*philo_creation(void *arg)
 {
-	int	n;
-
-	n = *(int *)arg;
-	printf("Philosopher [%d] created!\n", n);
+	t_philo	*philo = (t_philo *)arg;
+	printf("Philosopher [%d] created!\n", philo->ID);
 	return (NULL);
 }
 
