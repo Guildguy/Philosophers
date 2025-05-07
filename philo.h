@@ -29,9 +29,8 @@ typedef struct	s_data
 ////data_handler
 void	free_all(t_data *data);
 ////philosopher_creation
-void	*philo_creation(void *arg);
 int		init_data(t_data *data, char **v);
-int		philo_create(t_data *data);
+int		philo_creation(t_data *data);
 void	philo_wait(t_data *data);
 
 #endif

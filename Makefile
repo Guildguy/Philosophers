@@ -15,7 +15,7 @@ all: $(EXEC)
 $(EXEC): $(OBJ)
 	$(CC) $(FLAGS) $^ -o $@
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)%.c $(HEADER)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADER)
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(FLAGS) -c $< -o $@
 
