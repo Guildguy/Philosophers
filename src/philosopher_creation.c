@@ -1,6 +1,6 @@
 #include "../philo.h"
 
-void	*philo_creation(void *arg)
+static void	*philo_create(void *arg)
 {
 	t_philo	*philo = (t_philo *)arg;
 	printf("philosopher [%d] created!\n", philo->id);
@@ -35,14 +35,14 @@ int	init_data(t_data *data, char **v)
 	return (0);
 }
 
-int	philo_create(t_data *data)
+int	philo_creation(t_data *data)
 {
 	int	i;
 	i = 0;
 
 	while (i < data->nbr_of_philos)
 	{
-		if (pthread_create(&data->threads[i], NULL, philo_creation, &data->philos[i]) != 0)
+		if (pthread_create(&data->threads[i], NULL, philo_create, &data->philos[i]) != 0)
 		{
 			printf("Error: failure to create thread n°: [%d]!\n", i + 1);
 			return (1);
