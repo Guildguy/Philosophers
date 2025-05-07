@@ -21,7 +21,13 @@ typedef struct	s_data
 	pthread_t	*threads; //thread arr
 }				t_data;
 
-
+//src
+////data_handler
+void	free_all(t_data *data);
+////philosopher_creation
+int		init_data(t_data *data, char **v);
+int		philo_create(t_data *data);
+void	philo_wait(t_data *data);
 
 # define MSG "ERROR: ./philo <number_of_philosophers> <time_to_die> \\
 <time_to_eat> <time_to_sleep> Optional: \\
