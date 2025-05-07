@@ -1,6 +1,6 @@
 #include "../philo.h"
 
-void	*philo_creation(void *arg)
+void	*philo_convertion(void *arg)
 {
 	t_philo	*philo = (t_philo *)arg;
 	printf("Philosopher [%d] created!\n", philo->ID);
@@ -19,7 +19,7 @@ int	init_data (t_data *data, char **v)
 		return (1);
 	}
 	data->philos = malloc(sizeof(t_philo) * data->nbr_of_philos);
-	data->threads = main(sizeof(pthread_t) * data->nbr_of_philos);
+	data->threads = malloc(sizeof(pthread_t) * data->nbr_of_philos);
 	if (!data->philos || !data->threads)
 	{
 		printf("Error: failure to alocate memory!\n");
@@ -30,6 +30,23 @@ int	init_data (t_data *data, char **v)
 	while (i <= data->nbr_of_philos)
 	{
 		data->philos[i].ID = i + 1;
+		i++;
+	}
+	return (0);
+}
+
+int	philo_creation(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->nbr_of_philos)
+	{
+		if (pthread_create(&data->threads[i], NULL, philo_convertion, &data->philos[i]) != 0)
+		{
+			printf("Error: failure to create thread n°: [%d]!\n", i + 1);
+			return (1);
+		}
 		i++;
 	}
 	return (0);
