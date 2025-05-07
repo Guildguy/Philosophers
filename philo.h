@@ -9,9 +9,13 @@
 # include <sys/types.h>
 # include <sys/wait.h> //waitpid
 
+# define MSG "ERROR: ./philo <number_of_philosophers> <time_to_die> \\
+<time_to_eat> <time_to_sleep> Optional: \\
+<number_of_times_each_philosopher_must_eat>\n"
+
 typedef	struct	s_philo
 {
-	int	ID;
+	int	id;
 }				t_philo;
 
 typedef struct	s_data
@@ -25,12 +29,9 @@ typedef struct	s_data
 ////data_handler
 void	free_all(t_data *data);
 ////philosopher_creation
+void	*philo_creation(void *arg);
 int		init_data(t_data *data, char **v);
 int		philo_create(t_data *data);
 void	philo_wait(t_data *data);
-
-# define MSG "ERROR: ./philo <number_of_philosophers> <time_to_die> \\
-<time_to_eat> <time_to_sleep> Optional: \\
-<number_of_times_each_philosopher_must_eat>\n"
 
 #endif
