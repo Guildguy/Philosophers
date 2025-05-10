@@ -27,6 +27,7 @@ typedef struct s_data
 	t_philo			*philos;
 	pthread_t		*threads;
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	print_mutex;
 }				t_data;
 
 //src
