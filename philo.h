@@ -16,7 +16,8 @@
 //struct para armazenar os dados do filos
 typedef struct s_philo
 {
-	int	id;
+	int				id;
+	struct s_data	*data;
 }				t_philo;
 
 //struct para criação da thread onde os comportamentos dos filos serão executados
