@@ -6,19 +6,28 @@ static void	*philo_create(void *arg)
 	t_data	*data;
 
 	philo = (t_philo *)arg;
-	if (philo->id % 2 == 0) //filos pares comem 1°
+	while (6)
 	{
-		pthread_mutex_lock(&philo->data->forks[philo->id - 1]); //pega garfo direito
-		pthread_mutex_lock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]); //pega garfo esquerdo
+		pthread_mutex_lock(&philo->data->print_mutex);
+		printf("philospher [%d] is waiting!\n", philo->id);
+		pthread_mutex_unlock(&philo->data->print_mutex);
+		if (philo->id % 2 == 0) //filos pares comem 1°
+		{
+			pthread_mutex_lock(&philo->data->forks[philo->id - 1]); //pega garfo direito
+			pthread_mutex_lock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]); //pega garfo esquerdo
+		}
+		else //filos impares comem 1°
+		{
+			pthread_mutex_lock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]); //pega garfo esquerdo
+			pthread_mutex_lock(&philo->data->forks[philo->id - 1]); //pega garfo direito
+		}
+		pthread_mutex_lock(&philo->data->print_mutex);
+		printf("philosopher [%d] is eating!\n", philo->id);
+		pthread_mutex_unlock(&philo->data->print_mutex);
+		usleep(2000000);
+		pthread_mutex_unlock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]);
+		pthread_mutex_unlock(&philo->data->forks[philo->id -1]);
 	}
-	else //filos impares comem 1°
-	{
-		pthread_mutex_lock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]); //pega garfo esquerdo
-		pthread_mutex_lock(&philo->data->forks[philo->id - 1]); //pega garfo direito
-	}
-	printf("philosopher [%d] is eating!\n", philo->id);
-	pthread_mutex_unlock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]);
-	pthread_mutex_unlock(&philo->data->forks[philo->id -1]);
 	return (NULL);
 }
 
@@ -52,9 +61,7 @@ int	init_data(t_data *data, char **v)
 	if (!data->philos || !data->threads || !data->forks)
 	{
 		printf("Error: failure to alocate memory!\n");
-		free(data->philos);
-		free(data->threads);
-		free(data->forks);
+		free_all(data);
 		return (1);
 	}
 	i = 0;
