@@ -47,7 +47,7 @@ static void	*philo_create(void *arg)
 		printf("philosopher [%d] is eating!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
 		philo->last_meal = get_time();
-		usleep(philo->data->time_to_eat * 100000);
+		usleep(philo->data->time_to_eat * 10000);
 		printf("\n");
 		pthread_mutex_unlock(&philo->data->forks[philo->id
 			% philo->data->nbr_of_philos]);
@@ -133,7 +133,7 @@ int	init_data(t_data *data, char **v)
 	{
 		data->philos[i].id = i + 1;
 		data->philos[i].data = data;
-		data->philos->last_meal = data->start_time;
+		data->philos[i].last_meal = data->start_time;
 		pthread_mutex_init(&data->forks[i], NULL);
 		i++;
 	}
