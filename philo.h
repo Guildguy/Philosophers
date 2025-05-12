@@ -27,8 +27,8 @@ typedef struct s_data
 	int				nbr_of_philos;
 	int				time_to_eat;
 	long			start_time;
-	int			time_to_die;
-	int			is_dead;
+	int				time_to_die;
+	int				is_dead;
 	t_philo			*philos;
 	pthread_t		*monitor;
 	pthread_t		*threads;
