@@ -144,6 +144,11 @@ int	philo_creation(t_data *data)
 {
 	int	i;
 
+	if (pthread_create(&data->monitor, NULL, monitor_routine, data) != 0)
+	{
+		printf("Error: failure to create the monitor thread!\n");
+		return (1);
+	}
 	i = 0;
 	while (i < data->nbr_of_philos)
 	{
