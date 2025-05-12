@@ -18,7 +18,7 @@ typedef struct s_philo
 {
 	int				id;
 	struct s_data	*data;
-	long			*last_meal;
+	long			last_meal;
 }				t_philo;
 
 //struct para criação da thread onde os comportamentos dos filos serão executados
@@ -30,7 +30,7 @@ typedef struct s_data
 	int				time_to_die;
 	int				is_dead;
 	t_philo			*philos;
-	pthread_t		*monitor;
+	pthread_t		monitor;
 	pthread_t		*threads;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_mutex;
