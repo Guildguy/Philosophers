@@ -6,7 +6,7 @@
 # include <stdlib.h> //exit
 # include <unistd.h> //fork
 # include <signal.h> //kill
-# include <sys/types.h>
+# include <sys/time.h> //gettimeofday
 # include <sys/wait.h> //waitpid
 
 # define MSG "ERROR: ./philo <number_of_philosophers> <time_to_die> \
@@ -18,16 +18,23 @@ typedef struct s_philo
 {
 	int				id;
 	struct s_data	*data;
+	long			*last_meal;
 }				t_philo;
 
 //struct para criação da thread onde os comportamentos dos filos serão executados
 typedef struct s_data
 {
 	int				nbr_of_philos;
+	int				time_to_eat;
+	long			start_time;
+	int			time_to_die;
+	int			is_dead;
 	t_philo			*philos;
+	pthread_t		*monitor;
 	pthread_t		*threads;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	dead_mutex;
 }				t_data;
 
 //src
@@ -37,5 +44,6 @@ void	free_all(t_data *data);
 int		init_data(t_data *data, char **v);
 int		philo_creation(t_data *data);
 void	philo_wait(t_data *data);
+void	*monitor_routine(void *arg);
 
 #endif
