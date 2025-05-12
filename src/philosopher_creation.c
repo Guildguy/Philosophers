@@ -1,5 +1,14 @@
 #include "../philo.h"
 
+static long	get_time(void)
+{
+    struct timeval time;
+
+    gettimeofday(&time, NULL);
+    return (time.tv_sec * 1000 + time.tv_usec / 1000);
+}
+
+
 static void	*philo_create(void *arg)
 {
 	t_philo	*philo;
@@ -8,24 +17,40 @@ static void	*philo_create(void *arg)
 	philo = (t_philo *)arg;
 	while (6)
 	{
+		/*pthread_mutex_lock(&philo->data->dead_mutex);
+		if (philo->data->is_dead)
+		{
+			pthread_mutex_unlock(&philo->data->dead_mutex);
+			break;
+		}
+		pthread_mutex_unlock(&philo->data->dead_unlock);*/
 		pthread_mutex_lock(&philo->data->print_mutex);
 		printf("philospher [%d] is waiting!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
 		if (philo->id % 2 == 0) //filos pares comem 1°
 		{
-			pthread_mutex_lock(&philo->data->forks[philo->id - 1]); //pega garfo direito
-			pthread_mutex_lock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]); //pega garfo esquerdo
+			pthread_mutex_lock
+					(&philo->data->forks[philo->id - 1]); //pega garfo direito
+			pthread_mutex_lock
+					(&philo->data->forks[philo->id
+					% philo->data->nbr_of_philos]); //pega garfo esquerdo
 		}
 		else //filos impares comem 1°
 		{
-			pthread_mutex_lock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]); //pega garfo esquerdo
-			pthread_mutex_lock(&philo->data->forks[philo->id - 1]); //pega garfo direito
+			pthread_mutex_lock
+					(&philo->data->forks[philo->id
+					% philo->data->nbr_of_philos]); //pega garfo esquerdo
+			pthread_mutex_lock
+					(&philo->data->forks[philo->id - 1]); //pega garfo direito
 		}
 		pthread_mutex_lock(&philo->data->print_mutex);
 		printf("philosopher [%d] is eating!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
-		usleep(2000000);
-		pthread_mutex_unlock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]);
+		philo->last_meal = get_time();
+		usleep(philo->data->time_to_eat * 100000);
+		printf("\n");
+		pthread_mutex_unlock(&philo->data->forks[philo->id
+			% philo->data->nbr_of_philos]);
 		pthread_mutex_unlock(&philo->data->forks[philo->id -1]);
 	}
 	return (NULL);
@@ -43,7 +68,6 @@ void	philo_wait(t_data *data)
 		i++;
 	}
 }
-
 
 int	init_data(t_data *data, char **v)
 {
