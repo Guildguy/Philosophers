@@ -17,15 +17,15 @@ static void	*philo_create(void *arg)
 	philo = (t_philo *)arg;
 	while (6)
 	{
-		/*pthread_mutex_lock(&philo->data->dead_mutex);
+		pthread_mutex_lock(&philo->data->dead_mutex);
 		if (philo->data->is_dead)
 		{
 			pthread_mutex_unlock(&philo->data->dead_mutex);
 			break;
 		}
-		pthread_mutex_unlock(&philo->data->dead_unlock);*/
+		pthread_mutex_unlock(&philo->data->dead_mutex);
 		pthread_mutex_lock(&philo->data->print_mutex);
-		printf("philospher [%d] is waiting!\n", philo->id);
+		printf("philosopher [%d] is waiting!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
 		if (philo->id % 2 == 0) //filos pares comem 1°
 		{
@@ -56,6 +56,40 @@ static void	*philo_create(void *arg)
 	return (NULL);
 }
 
+void	*monitor_routine(void *arg)
+{
+	int		i;
+	t_data	*data;
+
+	data = (t_data *)arg;
+	while (6)
+	{
+		i = 0;
+		while (i < data->nbr_of_philos)
+		{
+			pthread_mutex_lock(&data->dead_mutex);
+			if (data->is_dead)
+			{
+				pthread_mutex_unlock(&data->dead_mutex);
+				return (NULL);
+			}
+			if (get_time() - data->philos[i].last_meal >= data->time_to_die)
+			{
+				data->is_dead = 1;
+				pthread_mutex_lock(&data->print_mutex);
+				printf("philosopher [%d] is dead!\n", data->philos[i]->id);
+				pthread_mutex_unlock(&data->print_mutex);
+				pthread_mutex_unlock(&data->dead_mutex);
+				return (NULL);
+			}
+			pthread_mutex_unlock(&data->dead_mutex);
+			i++;
+		}
+		usleep(1000);
+	}
+	return (NULL);
+}
+
 void	philo_wait(t_data *data)
 {
 	int	i;
@@ -74,6 +108,8 @@ int	init_data(t_data *data, char **v)
 	int	i;
 
 	data->nbr_of_philos = atoi(v[1]);
+	data->time_to_die = atoi(v[2]);
+	data->time_to_eat = atoi(v[2]);
 	if (data->nbr_of_philos <= 0)
 	{
 		printf("Error: must exist at least 1 philosopher!\n");
