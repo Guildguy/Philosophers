@@ -110,7 +110,7 @@ int	init_data(t_data *data, char **v)
 	data->nbr_of_philos = atoi(v[1]);
 	data->time_to_die = atoi(v[2]);
 	data->time_to_eat = atoi(v[2]);
-	if (data->nbr_of_philos <= 0)
+	if (data->nbr_of_philos <= 0 || data->time_to_die || data->time_to_eat)
 	{
 		printf("Error: must exist at least 1 philosopher!\n");
 		return (1);
@@ -124,14 +124,19 @@ int	init_data(t_data *data, char **v)
 		free_all(data);
 		return (1);
 	}
+	data->start_time = get_time();
+	data->is_dead = 0;
 	i = 0;
 	while (i < data->nbr_of_philos)
 	{
 		data->philos[i].id = i + 1;
 		data->philos[i].data = data;
+		data->philos->last_meal =data->start_time;
 		pthread_mutex_init(&data->forks[i], NULL);
 		i++;
 	}
+	pthread_mutex_init(&data->print_mutex, NULL);
+	pthread_mutex_init(&data->dead_mutex, NULL);
 	return (0);
 }
 
