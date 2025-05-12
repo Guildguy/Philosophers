@@ -77,7 +77,7 @@ void	*monitor_routine(void *arg)
 			{
 				data->is_dead = 1;
 				pthread_mutex_lock(&data->print_mutex);
-				printf("philosopher [%d] is dead!\n", data->philos[i]->id);
+				printf("philosopher [%d] is dead!\n", data->philos[i].id);
 				pthread_mutex_unlock(&data->print_mutex);
 				pthread_mutex_unlock(&data->dead_mutex);
 				return (NULL);
