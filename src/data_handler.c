@@ -23,5 +23,7 @@ void	free_all(t_data *data)
 			free(data->forks);
 		}
 		data->forks = NULL;
+		pthread_mutex_destroy(&data->print_mutex);
+		pthread_mutex_destroy(&data->dead_mutex);
 	}
 }
