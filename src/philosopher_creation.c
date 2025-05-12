@@ -101,6 +101,8 @@ void	philo_wait(t_data *data)
 			printf("Error: failure in wait the thread [%d]!\n", i + 1);
 		i++;
 	}
+	if (pthread_join(data->monitor, NULL) != 0)
+		printf("Error: failure in wait the monitor!\n");
 }
 
 int	init_data(t_data *data, char **v)
