@@ -5,9 +5,7 @@
 # include <pthread.h> //threads// processor threads
 # include <stdlib.h> //exit
 # include <unistd.h> //fork
-# include <signal.h> //kill
 # include <sys/time.h> //gettimeofday
-# include <sys/wait.h> //waitpid
 
 # define MSG "ERROR: ./philo <number_of_philosophers> <time_to_die> \
 <time_to_eat> <time_to_sleep> Optional: \
@@ -25,13 +23,13 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int				nbr_of_philos;
-	int				time_to_eat;
-	long			start_time;
 	int				time_to_die;
+	int				time_to_eat;
 	int				is_dead;
+	long			start_time;
 	t_philo			*philos;
-	pthread_t		monitor;
 	pthread_t		*threads;
+	pthread_t		monitor;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	dead_mutex;
