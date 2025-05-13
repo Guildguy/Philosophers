@@ -14,6 +14,7 @@ static void	*philo_create(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	usleep(philo->id * 1000);
 	while (6)
 	{
 		pthread_mutex_lock(&philo->data->dead_mutex);
@@ -42,12 +43,21 @@ static void	*philo_create(void *arg)
 			pthread_mutex_lock
 					(&philo->data->forks[philo->id - 1]); //pega garfo direito
 		}
+		pthread_mutex_lock(&philo->data->dead_mutex);
+		if (philo->data->is_dead)
+		{
+			pthread_mutex_unlock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]);
+			pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
+			pthread_mutex_unlock(&philo->data->dead_mutex);
+			break;
+		}
+		pthread_mutex_unlock(&philo->data->dead_mutex);
 		pthread_mutex_lock(&philo->data->print_mutex);
 		printf("philosopher [%d] is eating!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
 		philo->last_meal = get_time();
 		usleep(philo->data->time_to_eat * 1000);
-		//printf("\n");
+		printf("\n");
 		pthread_mutex_unlock(&philo->data->forks[philo->id
 			% philo->data->nbr_of_philos]);
 		pthread_mutex_unlock(&philo->data->forks[philo->id -1]);
