@@ -12,7 +12,6 @@ static long	get_time(void)
 static void	*philo_create(void *arg)
 {
 	t_philo	*philo;
-	t_data	*data;
 
 	philo = (t_philo *)arg;
 	while (6)
@@ -47,8 +46,8 @@ static void	*philo_create(void *arg)
 		printf("philosopher [%d] is eating!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
 		philo->last_meal = get_time();
-		usleep(philo->data->time_to_eat * 10000);
-		printf("\n");
+		usleep(philo->data->time_to_eat * 1000);
+		//printf("\n");
 		pthread_mutex_unlock(&philo->data->forks[philo->id
 			% philo->data->nbr_of_philos]);
 		pthread_mutex_unlock(&philo->data->forks[philo->id -1]);
