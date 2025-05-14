@@ -12,10 +12,38 @@ static void	*philo_create(void *arg)
 {
 	t_philo	*philo;
 	philo = (t_philo *)arg;
-	//think time
 	usleep(philo->id * 1000);
 	while (6)
 	{
+//get fork time
+		if (philo->id % 2 == 0)
+		{
+			pthread_mutex_lock
+					(&philo->data->forks[philo->id - 1]);
+			pthread_mutex_lock(&philo->data->print_mutex);
+			printf("philosopher [%d] has taken a righ fork!\n", philo->id);
+			pthread_mutex_unlock(&philo->data->print_mutex);
+			pthread_mutex_lock
+					(&philo->data->forks[philo->id
+					% philo->data->nbr_of_philos]);
+			pthread_mutex_lock(&philo->data->print_mutex);
+			printf("philosopher [%d] has taken a left fork!\n", philo->id);
+			pthread_mutex_unlock(&philo->data->print_mutex);
+		}
+		else
+		{
+			pthread_mutex_lock
+					(&philo->data->forks[philo->id
+					% philo->data->nbr_of_philos]);
+			pthread_mutex_lock(&philo->data->print_mutex);
+			printf("philosopher [%d] has taken a righ fork!\n", philo->id);
+			pthread_mutex_unlock(&philo->data->print_mutex);
+			pthread_mutex_lock
+					(&philo->data->forks[philo->id - 1]);
+			pthread_mutex_lock(&philo->data->print_mutex);
+			printf("philosopher [%d] has taken a left fork!\n", philo->id);
+			pthread_mutex_unlock(&philo->data->print_mutex);
+		}
 		pthread_mutex_lock(&philo->data->dead_mutex);
 		if (philo->data->is_dead)
 		{
@@ -23,26 +51,7 @@ static void	*philo_create(void *arg)
 			break ;
 		}
 		pthread_mutex_unlock(&philo->data->dead_mutex);
-		pthread_mutex_lock(&philo->data->print_mutex);
-		printf("philosopher [%d] is thinking!\n", philo->id);
-		pthread_mutex_unlock(&philo->data->print_mutex);
-	//eat time
-		if (philo->id % 2 == 0)
-		{
-			pthread_mutex_lock
-					(&philo->data->forks[philo->id - 1]);
-			pthread_mutex_lock
-					(&philo->data->forks[philo->id
-					% philo->data->nbr_of_philos]);
-		}
-		else
-		{
-			pthread_mutex_lock
-					(&philo->data->forks[philo->id
-					% philo->data->nbr_of_philos]);
-			pthread_mutex_lock
-					(&philo->data->forks[philo->id - 1]);
-		}
+//eat time
 		pthread_mutex_lock(&philo->data->dead_mutex);
 		if (philo->data->is_dead)
 		{
@@ -61,8 +70,8 @@ static void	*philo_create(void *arg)
 		usleep(philo->data->time_to_eat * 1000);
 		pthread_mutex_unlock(&philo->data->forks[philo->id
 			% philo->data->nbr_of_philos]);
-		pthread_mutex_unlock(&philo->data->forks[philo->id -1]);
-	//sleep time
+		pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
+//sleep time
 		pthread_mutex_lock(&philo->data->dead_mutex);
 		if (philo->data->is_dead)
 		{
@@ -72,8 +81,19 @@ static void	*philo_create(void *arg)
 		pthread_mutex_unlock(&philo->data->dead_mutex);
 		pthread_mutex_lock(&philo->data->print_mutex);
 		printf("philosopher [%d] is sleeping!\n", philo->id);
-		pthread_mutex_unlock(&philo->data->print_mutex);
+		pthread_mutex_unlock(&philo->data->print_mutex);	
 		usleep(philo->data->time_to_sleep * 1000);
+//think time
+		pthread_mutex_lock(&philo->data->dead_mutex);
+		if (philo->data->is_dead)
+		{
+			pthread_mutex_unlock(&philo->data->dead_mutex);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->data->dead_mutex);
+		pthread_mutex_lock(&philo->data->print_mutex);
+		printf("philosopher [%d] is thinking!\n", philo->id);
+		pthread_mutex_unlock(&philo->data->print_mutex);
 	}
 	return (NULL);
 }
