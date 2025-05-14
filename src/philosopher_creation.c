@@ -2,12 +2,11 @@
 
 static long	get_time(void)
 {
-    struct timeval time;
+	struct timeval	time;
 
-    gettimeofday(&time, NULL);
-    return (time.tv_sec * 1000 + time.tv_usec / 1000);
+	gettimeofday(&time, NULL);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
-
 
 static void	*philo_create(void *arg)
 {
@@ -21,7 +20,7 @@ static void	*philo_create(void *arg)
 		if (philo->data->is_dead)
 		{
 			pthread_mutex_unlock(&philo->data->dead_mutex);
-			break;
+			break ;
 		}
 		pthread_mutex_unlock(&philo->data->dead_mutex);
 		pthread_mutex_lock(&philo->data->print_mutex);
@@ -46,10 +45,12 @@ static void	*philo_create(void *arg)
 		pthread_mutex_lock(&philo->data->dead_mutex);
 		if (philo->data->is_dead)
 		{
-			pthread_mutex_unlock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]);
+			pthread_mutex_unlock
+					(&philo->data->forks[philo->id
+					% philo->data->nbr_of_philos]);
 			pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
 			pthread_mutex_unlock(&philo->data->dead_mutex);
-			break;
+			break ;
 		}
 		pthread_mutex_unlock(&philo->data->dead_mutex);
 		pthread_mutex_lock(&philo->data->print_mutex);
@@ -121,7 +122,8 @@ int	init_data(t_data *data, char **v)
 	data->nbr_of_philos = atoi(v[1]);
 	data->time_to_die = atoi(v[2]);
 	data->time_to_eat = atoi(v[3]);
-	if (data->nbr_of_philos <= 0 || data->time_to_die <= 0 || data->time_to_eat <= 0)
+	if (data->nbr_of_philos <= 0 || data->time_to_die <= 0
+		|| data->time_to_eat <= 0)
 	{
 		printf("Error: must exist at least 1 philosopher!\n");
 		return (1);
