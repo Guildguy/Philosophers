@@ -10,7 +10,7 @@
 # define MSG "ERROR: ./philo <number_of_philosophers> <time_to_die> \
 <time_to_eat> <time_to_sleep> Optional: \
 <number_of_times_each_philosopher_must_eat>\n"
-
+//changes
 typedef struct s_philo
 {
 	unsigned int	id;
