@@ -11,8 +11,8 @@ static long	get_time(void)
 static void	*philo_create(void *arg)
 {
 	t_philo	*philo;
-	//think time
 	philo = (t_philo *)arg;
+	//think time
 	usleep(philo->id * 1000);
 	while (6)
 	{
@@ -62,7 +62,14 @@ static void	*philo_create(void *arg)
 		pthread_mutex_unlock(&philo->data->forks[philo->id
 			% philo->data->nbr_of_philos]);
 		pthread_mutex_unlock(&philo->data->forks[philo->id -1]);
-	//sleep time	
+	//sleep time
+		pthread_mutex_lock(&philo->data->dead_mutex);
+		if (philo->data->is_dead)
+		{
+			pthread_mutex_unlock(&philo->data->dead_mutex);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->data->dead_mutex);
 		pthread_mutex_lock(&philo->data->print_mutex);
 		printf("philosopher [%d] is sleeping!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
@@ -139,7 +146,7 @@ int	init_data(t_data *data, char **v)
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->nbr_of_philos);
 	if (!data->philos || !data->threads || !data->forks)
 	{
-		printf("Error: failure to alocate memory!\n");
+		printf("Error: failure to allocate memory!\n");
 		free_all(data);
 		return (1);
 	}
