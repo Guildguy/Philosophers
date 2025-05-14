@@ -52,7 +52,7 @@ static void	*philo_create(void *arg)
 			}
 			pthread_mutex_unlock(&philo->data->dead_mutex);
 			pthread_mutex_lock(&philo->data->print_mutex);
-			printf("philosopher [%d] has taken a righ fork!\n", philo->id);
+			printf("philosopher [%d] has taken a right fork!\n", philo->id);
 			pthread_mutex_unlock(&philo->data->print_mutex);
 		}
 		else
@@ -71,7 +71,7 @@ static void	*philo_create(void *arg)
 			}
 			pthread_mutex_unlock(&philo->data->dead_mutex);
 			pthread_mutex_lock(&philo->data->print_mutex);
-			printf("philosopher [%d] has taken a righ fork!\n", philo->id);
+			printf("philosopher [%d] has taken a right fork!\n", philo->id);
 			pthread_mutex_unlock(&philo->data->print_mutex);
 			pthread_mutex_lock
 					(&philo->data->forks[philo->id - 1]);
