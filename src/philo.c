@@ -9,7 +9,7 @@ int	main(int c, char **v)
 		printf(MSG);
 		return (1);
 	}
-	if (init_data(&data, v, c) != 0)
+	if (init_data(&data, c, v) != 0)
 		return (1);
 	if (philo_creation(&data) != 0)
 	{
