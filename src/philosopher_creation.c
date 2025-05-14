@@ -26,21 +26,21 @@ static void	*philo_create(void *arg)
 		pthread_mutex_lock(&philo->data->print_mutex);
 		printf("philosopher [%d] is waiting!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
-		if (philo->id % 2 == 0) //filos pares comem 1°
+		if (philo->id % 2 == 0)
 		{
 			pthread_mutex_lock
-					(&philo->data->forks[philo->id - 1]); //pega garfo direito
+					(&philo->data->forks[philo->id - 1]);
 			pthread_mutex_lock
 					(&philo->data->forks[philo->id
-					% philo->data->nbr_of_philos]); //pega garfo esquerdo
+					% philo->data->nbr_of_philos]);
 		}
-		else //filos impares comem 1°
+		else
 		{
 			pthread_mutex_lock
 					(&philo->data->forks[philo->id
-					% philo->data->nbr_of_philos]); //pega garfo esquerdo
+					% philo->data->nbr_of_philos]);
 			pthread_mutex_lock
-					(&philo->data->forks[philo->id - 1]); //pega garfo direito
+					(&philo->data->forks[philo->id - 1]);
 		}
 		pthread_mutex_lock(&philo->data->dead_mutex);
 		if (philo->data->is_dead)
