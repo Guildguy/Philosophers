@@ -3,13 +3,13 @@
 int	main(int c, char **v)
 {
 	t_data	data = {0};
-	if (c < 5 || c > 6)
+	if (c != 5 && c != 6)
 	{
 		free_all(&data);
 		printf(MSG);
 		return (1);
 	}
-	if (init_data(&data, v) != 0)
+	if (init_data(&data, v, c) != 0)
 		return (1);
 	if (philo_creation(&data) != 0)
 	{
