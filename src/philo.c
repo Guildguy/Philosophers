@@ -5,6 +5,7 @@ int	main(int c, char **v)
 	t_data	data = {0};
 	if (c < 5 || c > 6)
 	{
+		free_all(&data);
 		printf(MSG);
 		return (1);
 	}
