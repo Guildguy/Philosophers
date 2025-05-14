@@ -3,7 +3,7 @@
 int	main(int c, char **v)
 {
 	t_data	data = {0};
-	if (/*c < 5 || c > 6*/ c != 4)
+	if (c < 5 || c > 6)
 	{
 		printf(MSG);
 		return (1);
