@@ -10,7 +10,12 @@ static long	get_time(void)
 
 static void	*philo_create(void *arg)
 {
+	int		right_fork;
+	int		left_fork;
 	t_philo	*philo;
+
+	right_fork = 0;
+	left_fork = 0;
 	philo = (t_philo *)arg;
 	usleep(philo->id * 1000);
 	while (6)
@@ -20,12 +25,32 @@ static void	*philo_create(void *arg)
 		{
 			pthread_mutex_lock
 					(&philo->data->forks[philo->id - 1]);
+			left_fork = 1;
+			pthread_mutex_lock(&philo->data->dead_mutex);
+			if (philo->data->is_dead)
+			{
+				pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
+				pthread_mutex_unlock(&philo->data->dead_mutex);
+				break ;
+			}
+			pthread_mutex_unlock(&philo->data->dead_mutex);
 			pthread_mutex_lock(&philo->data->print_mutex);
 			printf("philosopher [%d] has taken a left fork!\n", philo->id);
 			pthread_mutex_unlock(&philo->data->print_mutex);
 			pthread_mutex_lock
 				(&philo->data->forks[philo->id
 				% philo->data->nbr_of_philos]);
+			right_fork = 1;
+			pthread_mutex_lock(&philo->data->dead_mutex);
+			if (philo->data->is_dead)
+			{
+				pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
+				pthread_mutex_unlock(&philo->data->forks[philo->id
+					% philo->data->nbr_of_philos]);
+				pthread_mutex_unlock(&philo->data->dead_mutex);
+				break ;
+			}
+			pthread_mutex_unlock(&philo->data->dead_mutex);
 			pthread_mutex_lock(&philo->data->print_mutex);
 			printf("philosopher [%d] has taken a righ fork!\n", philo->id);
 			pthread_mutex_unlock(&philo->data->print_mutex);
@@ -35,22 +60,36 @@ static void	*philo_create(void *arg)
 			pthread_mutex_lock
 				(&philo->data->forks[philo->id
 				% philo->data->nbr_of_philos]);
+			right_fork = 1;
+			pthread_mutex_lock(&philo->data->dead_mutex);
+			if (philo->data->is_dead)
+			{
+				pthread_mutex_unlock(&philo->data->forks[philo->id
+					% philo->data->nbr_of_philos]);
+				pthread_mutex_unlock(&philo->data->dead_mutex);
+				break ;
+			}
+			pthread_mutex_unlock(&philo->data->dead_mutex);
 			pthread_mutex_lock(&philo->data->print_mutex);
 			printf("philosopher [%d] has taken a righ fork!\n", philo->id);
 			pthread_mutex_unlock(&philo->data->print_mutex);
 			pthread_mutex_lock
 					(&philo->data->forks[philo->id - 1]);
+			left_fork = 1;
+			pthread_mutex_lock(&philo->data->dead_mutex);
+			if (philo->data->is_dead)
+			{
+				pthread_mutex_unlock(&philo->data->forks[philo->id
+					% philo->data->nbr_of_philos]);
+				pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
+				pthread_mutex_unlock(&philo->data->dead_mutex);
+				break ;
+			}
+			pthread_mutex_unlock(&philo->data->dead_mutex);
 			pthread_mutex_lock(&philo->data->print_mutex);
 			printf("philosopher [%d] has taken a left fork!\n", philo->id);
 			pthread_mutex_unlock(&philo->data->print_mutex);
 		}
-		pthread_mutex_lock(&philo->data->dead_mutex);
-		if (philo->data->is_dead)
-		{
-			pthread_mutex_unlock(&philo->data->dead_mutex);
-			break ;
-		}
-		pthread_mutex_unlock(&philo->data->dead_mutex);
 //eat time
 		pthread_mutex_lock(&philo->data->dead_mutex);
 		if (philo->data->is_dead)
@@ -71,6 +110,8 @@ static void	*philo_create(void *arg)
 		pthread_mutex_unlock(&philo->data->forks[philo->id
 			% philo->data->nbr_of_philos]);
 		pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
+		right_fork = 0;
+		left_fork = 0;
 //sleep time
 		pthread_mutex_lock(&philo->data->dead_mutex);
 		if (philo->data->is_dead)
@@ -95,6 +136,11 @@ static void	*philo_create(void *arg)
 		printf("philosopher [%d] is thinking!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
 	}
+	if (right_fork)
+		pthread_mutex_destroy(&philo->data->forks[philo->id
+			% philo->data->nbr_of_philos]);
+	if (left_fork)
+		pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
 	return (NULL);
 }
 
