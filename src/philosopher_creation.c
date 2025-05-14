@@ -158,7 +158,7 @@ static void	*philo_create(void *arg)
 		pthread_mutex_unlock(&philo->data->print_mutex);
 	}
 	if (right_fork)
-		pthread_mutex_destroy(&philo->data->forks[philo->id
+		pthread_mutex_unlock(&philo->data->forks[philo->id
 			% philo->data->nbr_of_philos]);
 	if (left_fork)
 		pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
@@ -214,7 +214,7 @@ void	philo_wait(t_data *data)
 		printf("Error: failure in wait the monitor!\n");
 }
 
-int	init_data(t_data *data, char **v)
+int	init_data(t_data *data, char **v, int c)
 {
 	int	i;
 
