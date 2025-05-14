@@ -8,7 +8,7 @@ static long	get_time(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-static void safe_usleep(long duration, t_philo *philo)
+static void	safe_usleep(unsigned long duration, t_philo *philo)
 {
 	long	start;
 
@@ -19,22 +19,20 @@ static void safe_usleep(long duration, t_philo *philo)
 		if (philo->data->is_dead)
 		{
 			pthread_mutex_unlock(&philo->data->dead_mutex);
-			break;
+			break ;
 		}
 		pthread_mutex_unlock(&philo->data->dead_mutex);
 		if (get_time() - start >= duration)
-			break;
-
+			break ;
 		usleep(1000);
     }
 }
 
-
 static void	*philo_create(void *arg)
 {
-	int		right_fork;
-	int		left_fork;
-	t_philo	*philo;
+	unsigned int	right_fork;
+	unsigned int	left_fork;
+	t_philo			*philo;
 
 	right_fork = 0;
 	left_fork = 0;
@@ -126,6 +124,7 @@ static void	*philo_create(void *arg)
 		pthread_mutex_unlock(&philo->data->dead_mutex);
 		pthread_mutex_lock(&philo->data->print_mutex);
 		printf("philosopher [%d] is eating!\n", philo->id);
+
 		pthread_mutex_unlock(&philo->data->print_mutex);
 		philo->last_meal = get_time();
 		safe_usleep(philo->data->time_to_eat, philo);
@@ -223,12 +222,7 @@ int	init_data(t_data *data, char **v)
 	data->time_to_die = atoi(v[2]);
 	data->time_to_eat = atoi(v[3]);
 	data->time_to_sleep = atoi(v[4]);
-	if (data->nbr_of_philos <= 0 || data->time_to_die <= 0
-		|| data->time_to_eat <= 0 || data->time_to_sleep <= 0)
-	{
-		printf("Error: must exist at least 1 philosopher!\n");
-		return (1);
-	}
+	data->nbr_of_meals = atoi(v[5]);
 	data->philos = malloc(sizeof(t_philo) * data->nbr_of_philos);
 	data->threads = malloc(sizeof(pthread_t) * data->nbr_of_philos);
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->nbr_of_philos);
@@ -240,6 +234,7 @@ int	init_data(t_data *data, char **v)
 	}
 	data->start_time = get_time();
 	data->is_dead = 0;
+	data->philos->meals = 0;
 	i = 0;
 	while (i < data->nbr_of_philos)
 	{
