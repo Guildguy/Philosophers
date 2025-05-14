@@ -16,7 +16,7 @@ static void	safe_usleep(unsigned long duration, t_philo *philo)
 	while (6)
 	{
 		pthread_mutex_lock(&philo->data->dead_mutex);
-		if (philo->data->is_dead)
+		if (philo->data->is_dead || philo->data->ate_enought)
 		{
 			pthread_mutex_unlock(&philo->data->dead_mutex);
 			break ;
