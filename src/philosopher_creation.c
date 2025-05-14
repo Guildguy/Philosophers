@@ -21,20 +21,20 @@ static void	*philo_create(void *arg)
 			pthread_mutex_lock
 					(&philo->data->forks[philo->id - 1]);
 			pthread_mutex_lock(&philo->data->print_mutex);
-			printf("philosopher [%d] has taken a righ fork!\n", philo->id);
+			printf("philosopher [%d] has taken a left fork!\n", philo->id);
 			pthread_mutex_unlock(&philo->data->print_mutex);
 			pthread_mutex_lock
-					(&philo->data->forks[philo->id
-					% philo->data->nbr_of_philos]);
+				(&philo->data->forks[philo->id
+				% philo->data->nbr_of_philos]);
 			pthread_mutex_lock(&philo->data->print_mutex);
-			printf("philosopher [%d] has taken a left fork!\n", philo->id);
+			printf("philosopher [%d] has taken a righ fork!\n", philo->id);
 			pthread_mutex_unlock(&philo->data->print_mutex);
 		}
 		else
 		{
 			pthread_mutex_lock
-					(&philo->data->forks[philo->id
-					% philo->data->nbr_of_philos]);
+				(&philo->data->forks[philo->id
+				% philo->data->nbr_of_philos]);
 			pthread_mutex_lock(&philo->data->print_mutex);
 			printf("philosopher [%d] has taken a righ fork!\n", philo->id);
 			pthread_mutex_unlock(&philo->data->print_mutex);
@@ -65,7 +65,7 @@ static void	*philo_create(void *arg)
 		pthread_mutex_unlock(&philo->data->dead_mutex);
 		pthread_mutex_lock(&philo->data->print_mutex);
 		printf("philosopher [%d] is eating!\n", philo->id);
-		pthread_mutex_unlock(&philo->data->print_mutex);	
+		pthread_mutex_unlock(&philo->data->print_mutex);
 		philo->last_meal = get_time();
 		usleep(philo->data->time_to_eat * 1000);
 		pthread_mutex_unlock(&philo->data->forks[philo->id
@@ -81,7 +81,7 @@ static void	*philo_create(void *arg)
 		pthread_mutex_unlock(&philo->data->dead_mutex);
 		pthread_mutex_lock(&philo->data->print_mutex);
 		printf("philosopher [%d] is sleeping!\n", philo->id);
-		pthread_mutex_unlock(&philo->data->print_mutex);	
+		pthread_mutex_unlock(&philo->data->print_mutex);
 		usleep(philo->data->time_to_sleep * 1000);
 //think time
 		pthread_mutex_lock(&philo->data->dead_mutex);
