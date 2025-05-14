@@ -214,7 +214,7 @@ void	philo_wait(t_data *data)
 		printf("Error: failure in wait the monitor!\n");
 }
 
-int	init_data(t_data *data, char **v, int c)
+int	init_data(t_data *data, int c, char **v)
 {
 	int	i;
 
@@ -222,7 +222,8 @@ int	init_data(t_data *data, char **v, int c)
 	data->time_to_die = atoi(v[2]);
 	data->time_to_eat = atoi(v[3]);
 	data->time_to_sleep = atoi(v[4]);
-	data->nbr_of_meals = atoi(v[5]);
+	if (c == 6)
+		data->nbr_of_meals = atoi(v[5]);
 	data->philos = malloc(sizeof(t_philo) * data->nbr_of_philos);
 	data->threads = malloc(sizeof(pthread_t) * data->nbr_of_philos);
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->nbr_of_philos);
@@ -234,7 +235,7 @@ int	init_data(t_data *data, char **v, int c)
 	}
 	data->start_time = get_time();
 	data->is_dead = 0;
-	data->philos->meals = 0;
+	data->philos[i].meals = 0;
 	i = 0;
 	while (i < data->nbr_of_philos)
 	{
