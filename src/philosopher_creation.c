@@ -8,6 +8,28 @@ static long	get_time(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
+static void safe_usleep(long duration, t_philo *philo)
+{
+	long	start;
+
+	start = get_time();
+	while (6)
+	{
+		pthread_mutex_lock(&philo->data->dead_mutex);
+		if (philo->data->is_dead)
+		{
+			pthread_mutex_unlock(&philo->data->dead_mutex);
+			break;
+		}
+		pthread_mutex_unlock(&philo->data->dead_mutex);
+		if (get_time() - start >= duration)
+			break;
+
+		usleep(1000);
+    }
+}
+
+
 static void	*philo_create(void *arg)
 {
 	int		right_fork;
@@ -106,7 +128,7 @@ static void	*philo_create(void *arg)
 		printf("philosopher [%d] is eating!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
 		philo->last_meal = get_time();
-		usleep(philo->data->time_to_eat * 1000);
+		safe_usleep(philo->data->time_to_eat, philo);
 		pthread_mutex_unlock(&philo->data->forks[philo->id
 			% philo->data->nbr_of_philos]);
 		pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
@@ -123,7 +145,7 @@ static void	*philo_create(void *arg)
 		pthread_mutex_lock(&philo->data->print_mutex);
 		printf("philosopher [%d] is sleeping!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
-		usleep(philo->data->time_to_sleep * 1000);
+		safe_usleep(philo->data->time_to_sleep, philo);
 //think time
 		pthread_mutex_lock(&philo->data->dead_mutex);
 		if (philo->data->is_dead)
