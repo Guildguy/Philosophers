@@ -11,23 +11,24 @@
 <time_to_eat> <time_to_sleep> Optional: \
 <number_of_times_each_philosopher_must_eat>\n"
 
-//struct para armazenar os dados do filos
 typedef struct s_philo
 {
-	int				id;
+	unsigned int	id;
 	struct s_data	*data;
-	long			last_meal;
+	unsigned long	last_meal;
+	unsigned int	meals;
 }				t_philo;
 
-//struct para criação da thread onde os comportamentos dos filos serão executados
 typedef struct s_data
 {
-	int				nbr_of_philos;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				is_dead;
-	long			start_time;
+	unsigned int	nbr_of_philos;
+	unsigned int	time_to_die;
+	unsigned int	time_to_eat;
+	unsigned int	time_to_sleep;
+	unsigned int	is_dead;
+	unsigned long	start_time;
+	unsigned int	nbr_of_meals;
+	unsigned int	ate_enought;
 	t_philo			*philos;
 	pthread_t		*threads;
 	pthread_t		monitor;
