@@ -11,7 +11,7 @@ static long	get_time(void)
 static void	*philo_create(void *arg)
 {
 	t_philo	*philo;
-
+	//think time
 	philo = (t_philo *)arg;
 	usleep(philo->id * 1000);
 	while (6)
@@ -24,8 +24,9 @@ static void	*philo_create(void *arg)
 		}
 		pthread_mutex_unlock(&philo->data->dead_mutex);
 		pthread_mutex_lock(&philo->data->print_mutex);
-		printf("philosopher [%d] is waiting!\n", philo->id);
+		printf("philosopher [%d] is thinking!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
+	//eat time
 		if (philo->id % 2 == 0)
 		{
 			pthread_mutex_lock
@@ -55,13 +56,17 @@ static void	*philo_create(void *arg)
 		pthread_mutex_unlock(&philo->data->dead_mutex);
 		pthread_mutex_lock(&philo->data->print_mutex);
 		printf("philosopher [%d] is eating!\n", philo->id);
-		pthread_mutex_unlock(&philo->data->print_mutex);
+		pthread_mutex_unlock(&philo->data->print_mutex);	
 		philo->last_meal = get_time();
 		usleep(philo->data->time_to_eat * 1000);
-		printf("\n");
 		pthread_mutex_unlock(&philo->data->forks[philo->id
 			% philo->data->nbr_of_philos]);
 		pthread_mutex_unlock(&philo->data->forks[philo->id -1]);
+	//sleep time	
+		pthread_mutex_lock(&philo->data->print_mutex);
+		printf("philosopher [%d] is sleeping!\n", philo->id);
+		pthread_mutex_unlock(&philo->data->print_mutex);
+		usleep(philo->data->time_to_sleep * 1000);
 	}
 	return (NULL);
 }
@@ -122,8 +127,9 @@ int	init_data(t_data *data, char **v)
 	data->nbr_of_philos = atoi(v[1]);
 	data->time_to_die = atoi(v[2]);
 	data->time_to_eat = atoi(v[3]);
+	data->time_to_sleep = atoi(v[4]);
 	if (data->nbr_of_philos <= 0 || data->time_to_die <= 0
-		|| data->time_to_eat <= 0)
+		|| data->time_to_eat <= 0 || data->time_to_sleep <= 0)
 	{
 		printf("Error: must exist at least 1 philosopher!\n");
 		return (1);
