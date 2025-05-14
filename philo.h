@@ -41,7 +41,7 @@ typedef struct s_data
 ////data_handler
 void	free_all(t_data *data);
 ////philosopher_creation
-int		init_data(t_data *data, char **v);
+int		init_data(t_data *data, char **v, int c);
 int		philo_creation(t_data *data);
 void	philo_wait(t_data *data);
 void	*monitor_routine(void *arg);
