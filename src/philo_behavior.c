@@ -1,3 +1,5 @@
+#include "../philo.h"
+
 int	*philo_behavior(t_philo *philo, char *action)
 {
     pthread_mutex_lock(&philo->data->print_mutex);
