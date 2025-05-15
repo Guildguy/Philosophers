@@ -28,7 +28,7 @@ typedef struct s_data
 	unsigned int	is_dead;
 	unsigned long	start_time;
 	unsigned int	nbr_of_meals;
-	unsigned int	ate_enought;
+	unsigned int	ate_enough;
 	t_philo			*philos;
 	pthread_t		*threads;
 	pthread_t		monitor;
