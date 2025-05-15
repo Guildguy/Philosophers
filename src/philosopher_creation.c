@@ -126,7 +126,7 @@ static void	*philo_create(void *arg)
 		printf("philosopher [%d] is eating!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
 		philo->last_meal = get_time();
-		philo->meals++; //test
+		philo->meals++;
 		safe_usleep(philo->data->time_to_eat, philo);
 		pthread_mutex_lock(&philo->data->dead_mutex);
 		if (philo->data->is_dead)
@@ -185,6 +185,7 @@ static void	*philo_create(void *arg)
 void	*monitor_routine(void *arg)
 {
 	int		i;
+	int		j;
 	t_data	*data;
 
 	data = (t_data *)arg;
@@ -207,6 +208,22 @@ void	*monitor_routine(void *arg)
 				pthread_mutex_unlock(&data->print_mutex);
 				pthread_mutex_unlock(&data->dead_mutex);
 				return (NULL);
+			}
+			if (data->nbr_of_meals < 0)
+			{
+				j = 0;
+				while (j < data->nbr_of_philos)
+				{
+					if (data->philos[j].meals < data->nbr_of_meals)
+						break ;
+					j++;
+				}
+				if (j == data->nbr_of_philos)
+				{
+					data->ate_enought = 1;
+					pthread_mutex_unlock(&data->dead_mutex);
+					return (NULL);
+				}
 			}
 			pthread_mutex_unlock(&data->dead_mutex);
 			i++;
