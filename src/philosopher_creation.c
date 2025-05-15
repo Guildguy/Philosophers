@@ -126,7 +126,7 @@ static void	*philo_create(void *arg)
 		printf("philosopher [%d] is eating!\n", philo->id);
 		pthread_mutex_unlock(&philo->data->print_mutex);
 		philo->last_meal = get_time();
-		philo->meals++;
+		philo->meals++; //test
 		safe_usleep(philo->data->time_to_eat, philo);
 		pthread_mutex_lock(&philo->data->dead_mutex);
 		if (philo->data->is_dead)
