@@ -234,6 +234,9 @@ void	*monitor_routine(void *arg)
 				if (j == data->nbr_of_philos)
 				{
 					data->ate_enough = 1;
+					pthread_mutex_lock(&data->print_mutex);
+					printf("philosphers eat [%d] time!\n", data->nbr_of_meals);
+					pthread_mutex_unlock(&data->print_mutex);
 					pthread_mutex_unlock(&data->dead_mutex);
 					return (NULL);
 				}
