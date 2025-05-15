@@ -128,9 +128,26 @@ static void	*philo_create(void *arg)
 		pthread_mutex_unlock(&philo->data->print_mutex);
 		philo->last_meal = get_time();
 		safe_usleep(philo->data->time_to_eat, philo);
+		pthread_mutex_lock(&philo->data->dead_mutex);
+		if (philo->data->is_dead)
+		{
+			pthread_mutex_unlock
+					(&philo->data->forks[philo->id
+					% philo->data->nbr_of_philos]);
+			pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
+			pthread_mutex_unlock(&philo->data->dead_mutex);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->data->dead_mutex);
 		pthread_mutex_unlock(&philo->data->forks[philo->id
 			% philo->data->nbr_of_philos]);
+		pthread_mutex_lock(&philo->data->print_mutex);
+		printf("philosopher [%d] released the right fork!\n", philo->id);
+		pthread_mutex_unlock(&philo->data->print_mutex);
 		pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
+		pthread_mutex_lock(&philo->data->print_mutex);
+		printf("philosopher [%d] released the left fork!\n", philo->id);
+		pthread_mutex_unlock(&philo->data->print_mutex);
 		right_fork = 0;
 		left_fork = 0;
 //sleep time
