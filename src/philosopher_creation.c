@@ -258,6 +258,8 @@ int	init_data(t_data *data, int c, char **v)
 	data->time_to_die = atoi(v[2]);
 	data->time_to_eat = atoi(v[3]);
 	data->time_to_sleep = atoi(v[4]);
+	if (c == 5)
+		data->nbr_of_meals = 0;
 	if (c == 6)
 		data->nbr_of_meals = atoi(v[5]);
 	data->philos = malloc(sizeof(t_philo) * data->nbr_of_philos);
