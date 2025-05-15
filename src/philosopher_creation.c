@@ -136,6 +136,17 @@ static void	*philo_create(void *arg)
 		philo->last_meal = get_time();
 		philo->meals++;
 		safe_usleep(philo->data->time_to_eat, philo);
+		pthread_mutex_lock(&philo->data->dead_mutex);
+		if (philo->data->is_dead || philo->data->ate_enough)
+		{
+			pthread_mutex_unlock
+					(&philo->data->forks[philo->id
+					% philo->data->nbr_of_philos]);
+			pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
+			pthread_mutex_unlock(&philo->data->dead_mutex);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->data->dead_mutex);
 		pthread_mutex_unlock(&philo->data->forks[philo->id
 			% philo->data->nbr_of_philos]);
 /********************************************************************************/
