@@ -250,15 +250,16 @@ int	init_data(t_data *data, int c, char **v)
 		free_all(data);
 		return (1);
 	}
-	data->start_time = get_time();
-	data->is_dead = 0;
-	data->philos[i].meals = 0;
 	i = 0;
+	data->start_time = get_time();
+	data->ate_enought = 0;
+	data->is_dead = 0;
 	while (i < data->nbr_of_philos)
 	{
 		data->philos[i].id = i + 1;
 		data->philos[i].data = data;
 		data->philos[i].last_meal = data->start_time;
+		data->philos[i].meals = 0;
 		pthread_mutex_init(&data->forks[i], NULL);
 		i++;
 	}
