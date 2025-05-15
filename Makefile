@@ -4,7 +4,7 @@ FLAGS = -pthread #-fsanitize=thread //dispara aviso que está ocorrendo uma cond
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRC = $(SRC_DIR)/philosopher_creation.c $(SRC_DIR)/data_handler.c $(SRC_DIR)/philo.c $(SRD_DIR)/philo_behavior.c
+SRC = $(SRC_DIR)/philosopher_creation.c $(SRC_DIR)/data_handler.c $(SRC_DIR)/philo.c $(SRC_DIR)/philo_behavior.c
 OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
 
 HEADER = philo.h
