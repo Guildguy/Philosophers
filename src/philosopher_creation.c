@@ -37,7 +37,7 @@ static void	*philo_create(void *arg)
 	right_fork = 0;
 	left_fork = 0;
 	philo = (t_philo *)arg;
-	usleep(philo->id * 1000);
+	usleep(philo->id * 500);
 	while (6)
 	{
 //get fork time
@@ -142,18 +142,57 @@ static void	*philo_create(void *arg)
 		safe_usleep(philo->data->time_to_eat, philo);
 //release fork
 		if (left_fork)
+		{
+			pthread_mutex_lock(&philo->data->dead_mutex);
+			if (philo->data->is_dead || philo->data->ate_enough)
+			{
+				pthread_mutex_unlock(&philo->data->dead_mutex);
+				pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
+				if (right_fork)
+					pthread_mutex_unlock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]);
+				break ;
+			}
+			pthread_mutex_unlock(&philo->data->dead_mutex);
 			pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
-		pthread_mutex_lock(&philo->data->print_mutex);
-		printf("philosopher [%d] released the left fork!\n", philo->id);
-		pthread_mutex_unlock(&philo->data->print_mutex);
+			pthread_mutex_lock(&philo->data->print_mutex);
+			pthread_mutex_lock(&philo->data->dead_mutex);
+			if (philo->data->is_dead || philo->data->ate_enough)
+			{
+				pthread_mutex_unlock(&philo->data->print_mutex);
+				pthread_mutex_unlock(&philo->data->dead_mutex);
+				if (right_fork)
+					pthread_mutex_unlock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]);
+				break ;
+			}
+			printf("philosopher [%d] released the left fork!\n", philo->id);
+			pthread_mutex_unlock(&philo->data->print_mutex);
+			pthread_mutex_unlock(&philo->data->dead_mutex);
+		}
 /********************************************************************************/
-		if (right_fork)	
+		if (right_fork)
+		{
+			pthread_mutex_lock(&philo->data->dead_mutex);
+			if (philo->data->is_dead || philo->data->ate_enough)
+			{
+				pthread_mutex_unlock(&philo->data->dead_mutex);
+				pthread_mutex_unlock(&philo->data->forks[philo->id % philo->data->nbr_of_philos]);
+				break ;
+			}
+			pthread_mutex_unlock(&philo->data->dead_mutex);
 			pthread_mutex_unlock(&philo->data->forks[philo->id
 				% philo->data->nbr_of_philos]);
-		pthread_mutex_lock(&philo->data->print_mutex);
-		printf("philosopher [%d] released the right fork!\n", philo->id);
-		pthread_mutex_unlock(&philo->data->print_mutex);
-		pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
+			pthread_mutex_lock(&philo->data->print_mutex);
+			pthread_mutex_lock(&philo->data->dead_mutex);
+			if (philo->data->is_dead || philo->data->ate_enough)
+			{
+				pthread_mutex_unlock(&philo->data->print_mutex);
+				pthread_mutex_unlock(&philo->data->dead_mutex);
+				break ;
+			}
+			printf("philosopher [%d] released the right fork!\n", philo->id);
+			pthread_mutex_unlock(&philo->data->print_mutex);
+			pthread_mutex_unlock(&philo->data->dead_mutex);
+		}
 		right_fork = 0;
 		left_fork = 0;
 /********************************************************************************/
@@ -193,9 +232,9 @@ static void	*philo_create(void *arg)
 
 void	*monitor_routine(void *arg)
 {
-	int		i;
-	int		j;
-	t_data	*data;
+	unsigned int	i;
+	unsigned int	j;
+	t_data			*data;
 
 	data = (t_data *)arg;
 	while (6)
@@ -208,16 +247,7 @@ void	*monitor_routine(void *arg)
 			{
 				pthread_mutex_unlock(&data->dead_mutex);
 				return (NULL);
-			}
-			if (get_time() - data->philos[i].last_meal >= data->time_to_die)
-			{
-				data->is_dead = 1;
-				pthread_mutex_lock(&data->print_mutex);
-				printf("philosopher [%d] is dead!\n", data->philos[i].id);
-				pthread_mutex_unlock(&data->print_mutex);
-				pthread_mutex_unlock(&data->dead_mutex);
-				return (NULL);
-			}
+			}		
 			if (data->nbr_of_meals > 0)
 			{
 				j = 0;
@@ -236,6 +266,15 @@ void	*monitor_routine(void *arg)
 					pthread_mutex_unlock(&data->dead_mutex);
 					return (NULL);
 				}
+			}
+			if (get_time() - data->philos[i].last_meal >= data->time_to_die)
+			{
+				data->is_dead = 1;
+				pthread_mutex_lock(&data->print_mutex);
+				printf("philosopher [%d] is dead!\n", data->philos[i].id);
+				pthread_mutex_unlock(&data->print_mutex);
+				pthread_mutex_unlock(&data->dead_mutex);
+				return (NULL);
 			}
 			pthread_mutex_unlock(&data->dead_mutex);
 			i++;
