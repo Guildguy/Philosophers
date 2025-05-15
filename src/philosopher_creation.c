@@ -47,7 +47,7 @@ static void	*philo_create(void *arg)
 					(&philo->data->forks[philo->id - 1]);
 			left_fork = 1;
 			pthread_mutex_lock(&philo->data->dead_mutex);
-			if (philo->data->is_dead)
+			if (philo->data->is_dead || philo->data->ate_enought)
 			{
 				pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
 				pthread_mutex_unlock(&philo->data->dead_mutex);
@@ -62,7 +62,7 @@ static void	*philo_create(void *arg)
 				% philo->data->nbr_of_philos]);
 			right_fork = 1;
 			pthread_mutex_lock(&philo->data->dead_mutex);
-			if (philo->data->is_dead)
+			if (philo->data->is_dead || philo->data->ate_enought)
 			{
 				pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
 				pthread_mutex_unlock(&philo->data->forks[philo->id
@@ -82,7 +82,7 @@ static void	*philo_create(void *arg)
 				% philo->data->nbr_of_philos]);
 			right_fork = 1;
 			pthread_mutex_lock(&philo->data->dead_mutex);
-			if (philo->data->is_dead)
+			if (philo->data->is_dead || philo->data->ate_enought)
 			{
 				pthread_mutex_unlock(&philo->data->forks[philo->id
 					% philo->data->nbr_of_philos]);
@@ -97,7 +97,7 @@ static void	*philo_create(void *arg)
 					(&philo->data->forks[philo->id - 1]);
 			left_fork = 1;
 			pthread_mutex_lock(&philo->data->dead_mutex);
-			if (philo->data->is_dead)
+			if (philo->data->is_dead || philo->data->ate_enought)
 			{
 				pthread_mutex_unlock(&philo->data->forks[philo->id
 					% philo->data->nbr_of_philos]);
@@ -112,7 +112,7 @@ static void	*philo_create(void *arg)
 		}
 //eat time
 		pthread_mutex_lock(&philo->data->dead_mutex);
-		if (philo->data->is_dead)
+		if (philo->data->is_dead || philo->data->ate_enought)
 		{
 			pthread_mutex_unlock
 					(&philo->data->forks[philo->id
@@ -152,7 +152,7 @@ static void	*philo_create(void *arg)
 		left_fork = 0;
 //sleep time
 		pthread_mutex_lock(&philo->data->dead_mutex);
-		if (philo->data->is_dead)
+		if (philo->data->is_dead || philo->data->ate_enought)
 		{
 			pthread_mutex_unlock(&philo->data->dead_mutex);
 			break ;
@@ -164,7 +164,7 @@ static void	*philo_create(void *arg)
 		safe_usleep(philo->data->time_to_sleep, philo);
 //think time
 		pthread_mutex_lock(&philo->data->dead_mutex);
-		if (philo->data->is_dead)
+		if (philo->data->is_dead || philo->data->ate_enought)
 		{
 			pthread_mutex_unlock(&philo->data->dead_mutex);
 			break ;
