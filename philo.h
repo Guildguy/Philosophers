@@ -45,5 +45,6 @@ int		init_data(t_data *data, int c, char **v);
 int		philo_creation(t_data *data);
 void	philo_wait(t_data *data);
 void	*monitor_routine(void *arg);
-
+/////philo_behavior
+int	*philo_behavior(t_philo *philo, char *action);
 #endif
