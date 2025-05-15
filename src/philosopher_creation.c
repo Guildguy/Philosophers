@@ -208,7 +208,7 @@ void	*monitor_routine(void *arg)
 		while (i < data->nbr_of_philos)
 		{
 			pthread_mutex_lock(&data->dead_mutex);
-			if (data->is_dead)
+			if (data->is_dead || data->ate_enough)
 			{
 				pthread_mutex_unlock(&data->dead_mutex);
 				return (NULL);
@@ -269,10 +269,10 @@ int	init_data(t_data *data, int c, char **v)
 	data->time_to_die = atoi(v[2]);
 	data->time_to_eat = atoi(v[3]);
 	data->time_to_sleep = atoi(v[4]);
-	if (c == 5)
-		data->nbr_of_meals = 0;
 	if (c == 6)
 		data->nbr_of_meals = atoi(v[5]);
+	else
+		data->nbr_of_meals = 0;
 	data->philos = malloc(sizeof(t_philo) * data->nbr_of_philos);
 	data->threads = malloc(sizeof(pthread_t) * data->nbr_of_philos);
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->nbr_of_philos);
@@ -284,8 +284,8 @@ int	init_data(t_data *data, int c, char **v)
 	}
 	i = 0;
 	data->start_time = get_time();
-	data->ate_enough = 0;
 	data->is_dead = 0;
+	data->ate_enough = 0;
 	while (i < data->nbr_of_philos)
 	{
 		data->philos[i].id = i + 1;
