@@ -16,6 +16,7 @@ int	behavior_prevention(t_philo *philo, unsigned int *l_fork,
 	pthread_mutex_unlock(&philo->data->dead_mutex);
 	return (0);
 }
+
 void	philo_behavior(t_philo *philo, char *action)
 {
 	pthread_mutex_lock(&philo->data->print_mutex);
