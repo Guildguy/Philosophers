@@ -8,3 +8,8 @@ int	*philo_behavior(t_philo *philo, char *action)
     return (0);
 }
 
+int behavior_prevention(t_philo *philo, unsigned int *l_fork, unsigned int *r_fork)
+{
+    pthread_mutex_lock(&philo->data->dead_mutex);
+    pthread_mutex_unlock(&philo->data->dead_mutex);
+}
