@@ -46,5 +46,7 @@ int		philo_creation(t_data *data);
 void	philo_wait(t_data *data);
 void	*monitor_routine(void *arg);
 /////philo_behavior
-int	*philo_behavior(t_philo *philo, char *action);
+int		philo_behavior(t_philo *philo, char *action);
+int		behavior_prevention(t_philo *philo, unsigned int *l_fork,
+			unsigned int *r_fork);
 #endif
