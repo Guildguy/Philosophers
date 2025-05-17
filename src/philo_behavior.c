@@ -1,18 +1,5 @@
 #include "../philo.h"
 
-int	philo_behavior(t_philo *philo, char *action)
-{
-	pthread_mutex_lock(&philo->data->print_mutex);
-	if (behavior_prevention(philo, &(unsigned int){0}, &(unsigned int){0}))
-	{
-		pthread_mutex_unlock(&philo->data->print_mutex);
-		return (1);
-	}	
-	printf("Philosopher [%d] %s!\n", philo->id, action);
-	pthread_mutex_unlock(&philo->data->print_mutex);
-	return (0);
-}
-
 int	behavior_prevention(t_philo *philo, unsigned int *l_fork,
 		unsigned int *r_fork)
 {
@@ -27,5 +14,17 @@ int	behavior_prevention(t_philo *philo, unsigned int *l_fork,
 		return (1);
 	}
 	pthread_mutex_unlock(&philo->data->dead_mutex);
+	return (0);
+}
+int	philo_behavior(t_philo *philo, char *action)
+{
+	pthread_mutex_lock(&philo->data->print_mutex);
+	if (behavior_prevention(philo, &(unsigned int){0}, &(unsigned int){0}))
+	{
+		pthread_mutex_unlock(&philo->data->print_mutex);
+		return (1);
+	}	
+	printf("Philosopher [%d] %s!\n", philo->id, action);
+	pthread_mutex_unlock(&philo->data->print_mutex);
 	return (0);
 }
