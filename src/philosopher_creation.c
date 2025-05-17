@@ -46,14 +46,8 @@ static void	*philo_create(void *arg)
 			pthread_mutex_lock
 					(&philo->data->forks[philo->id - 1]); //inicio garfo esquerdo
 			left_fork = 1;
-			pthread_mutex_lock(&philo->data->dead_mutex);
-			if (philo->data->is_dead || philo->data->ate_enough)
-			{
-				pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
-				pthread_mutex_unlock(&philo->data->dead_mutex);
+			if(behavior_prevention(philo, &left_fork, &right_fork))
 				break ;
-			}
-			pthread_mutex_unlock(&philo->data->dead_mutex);
 /********************************************************************************/
 			philo_behavior(philo, "has taken a left fork");
 /********************************************************************************/
@@ -61,15 +55,8 @@ static void	*philo_create(void *arg)
 				(&philo->data->forks[philo->id
 				% philo->data->nbr_of_philos]); //inicio garfo direito
 			right_fork = 1;
-			pthread_mutex_lock(&philo->data->dead_mutex);
-			if (philo->data->is_dead || philo->data->ate_enough)
-			{
-				pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
-				pthread_mutex_unlock(&philo->data->forks[philo->id
-					% philo->data->nbr_of_philos]);
-				pthread_mutex_unlock(&philo->data->dead_mutex);
-				break ;
-			}
+			if (behavior_prevention(philo, &left_fork, &right_fork))
+					break ;
 			pthread_mutex_unlock(&philo->data->dead_mutex);
 /********************************************************************************/
 			philo_behavior(philo, "has taken a right fork!");
@@ -81,51 +68,23 @@ static void	*philo_create(void *arg)
 				(&philo->data->forks[philo->id
 				% philo->data->nbr_of_philos]); //inicio garfo direito
 			right_fork = 1;
-			pthread_mutex_lock(&philo->data->dead_mutex);
-			if (philo->data->is_dead || philo->data->ate_enough)
-			{
-				pthread_mutex_unlock(&philo->data->forks[philo->id
-					% philo->data->nbr_of_philos]);
-				pthread_mutex_unlock(&philo->data->dead_mutex);
-				break ;
-			}
-			pthread_mutex_unlock(&philo->data->dead_mutex);
+			if (behavior_prevention(philo, &left_fork, &right_fork))
+					break ;
 /********************************************************************************/
 			philo_behavior(philo, "has taken a right fork!");
 /********************************************************************************/
 			pthread_mutex_lock
 					(&philo->data->forks[philo->id - 1]); //inicio garfo esquerdo
 			left_fork = 1;
-			pthread_mutex_lock(&philo->data->dead_mutex);
-			if (philo->data->is_dead || philo->data->ate_enough)
-			{
-				pthread_mutex_unlock(&philo->data->forks[philo->id
-					% philo->data->nbr_of_philos]);
-				pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
-				pthread_mutex_unlock(&philo->data->dead_mutex);
-				break ;
-			}
-			pthread_mutex_unlock(&philo->data->dead_mutex);
+			if (behavior_prevention(philo, &left_fork, &right_fork))
+					break ;
 /********************************************************************************/
 			philo_behavior(philo, "has taken a left fork!");
 /********************************************************************************/
 		}
 //eat time
-		pthread_mutex_lock(&philo->data->dead_mutex);
-		if (philo->data->is_dead || philo->data->ate_enough)
-		{
-			if (right_fork)
-			{
-				pthread_mutex_unlock
-					(&philo->data->forks[philo->id
-					% philo->data->nbr_of_philos]);
-			}
-			if (left_fork)
-				pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
-			pthread_mutex_unlock(&philo->data->dead_mutex);
+		if (behavior_prevention(philo, &left_fork, &right_fork))
 			break ;
-		}
-		pthread_mutex_unlock(&philo->data->dead_mutex);
 /********************************************************************************/
 		philo_behavior(philo, "is eating!");
 /********************************************************************************/
@@ -135,91 +94,42 @@ static void	*philo_create(void *arg)
 //release fork
 		if (left_fork)
 		{
-			pthread_mutex_lock(&philo->data->dead_mutex);
-			if (philo->data->is_dead || philo->data->ate_enough)
-			{
-				pthread_mutex_unlock(&philo->data->dead_mutex);
-				pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
-				if (right_fork)
-					pthread_mutex_unlock(&philo->data->forks[philo->id
-										% philo->data->nbr_of_philos]);
+			if (behavior_prevention(philo, &left_fork, &right_fork))
 				break ;
-			}
-			pthread_mutex_unlock(&philo->data->dead_mutex);
 			pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
-			pthread_mutex_lock(&philo->data->print_mutex);
-			pthread_mutex_lock(&philo->data->dead_mutex);
-			if (philo->data->is_dead || philo->data->ate_enough)
-			{
-				pthread_mutex_unlock(&philo->data->print_mutex);
-				pthread_mutex_unlock(&philo->data->dead_mutex);
-				if (right_fork)
-					pthread_mutex_unlock(&philo->data->forks[philo->id
-										% philo->data->nbr_of_philos]);
-				break ;
-			}
-			printf("philosopher [%d] released the left fork!\n", philo->id);
-			pthread_mutex_unlock(&philo->data->print_mutex);
-			pthread_mutex_unlock(&philo->data->dead_mutex);
+			philo_behavior(philo, "released the left fork!");
 		}
 /********************************************************************************/
 		if (right_fork)
 		{
-			pthread_mutex_lock(&philo->data->dead_mutex);
-			if (philo->data->is_dead || philo->data->ate_enough)
-			{
-				pthread_mutex_unlock(&philo->data->dead_mutex);
-				pthread_mutex_unlock(&philo->data->forks[philo->id
-									% philo->data->nbr_of_philos]);
+			if (behavior_prevention(philo, &left_fork, &right_fork))
 				break ;
-			}
-			pthread_mutex_unlock(&philo->data->dead_mutex);
 			pthread_mutex_unlock(&philo->data->forks[philo->id
 				% philo->data->nbr_of_philos]);
-			pthread_mutex_lock(&philo->data->print_mutex);
-			pthread_mutex_lock(&philo->data->dead_mutex);
-			if (philo->data->is_dead || philo->data->ate_enough)
-			{
-				pthread_mutex_unlock(&philo->data->print_mutex);
-				pthread_mutex_unlock(&philo->data->dead_mutex);
-				break ;
-			}
-			printf("philosopher [%d] released the right fork!\n", philo->id);
-			pthread_mutex_unlock(&philo->data->print_mutex);
-			pthread_mutex_unlock(&philo->data->dead_mutex);
+			philo_behavior(philo, "released the right fork!");
 		}
 		right_fork = 0;
 		left_fork = 0;
 /********************************************************************************/
 //sleep time
-		pthread_mutex_lock(&philo->data->dead_mutex);
-		if (philo->data->is_dead || philo->data->ate_enough)
-		{
-			pthread_mutex_unlock(&philo->data->dead_mutex);
+		if (behavior_prevention(philo, &left_fork, &right_fork))
 			break ;
-		}
-		pthread_mutex_unlock(&philo->data->dead_mutex);
 /********************************************************************************/
 		philo_behavior(philo, "is sleeping!");
 /*******************************************************************************/
 		safe_usleep(philo->data->time_to_sleep, philo);
 //think time
-		pthread_mutex_lock(&philo->data->dead_mutex);
-		if (philo->data->is_dead || philo->data->ate_enough)
-		{
-			pthread_mutex_unlock(&philo->data->dead_mutex);
+		if (behavior_prevention(philo, &left_fork, &right_fork))
 			break ;
-		}
-		pthread_mutex_unlock(&philo->data->dead_mutex);
 /********************************************************************************/
 		philo_behavior(philo, "is thinking!");
 /********************************************************************************/
 	}
+	if (left_fork)
+		pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
 	if (right_fork)
 		pthread_mutex_unlock(&philo->data->forks[philo->id
 			% philo->data->nbr_of_philos]);
-	if (left_fork)
-		pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
 	return (NULL);
 }
 
@@ -254,7 +164,7 @@ void	*monitor_routine(void *arg)
 				{
 					data->ate_enough = 1;
 					pthread_mutex_lock(&data->print_mutex);
-					printf("philosophers ate [%u] times!\n",
+					printf("philosophers ate %u times!\n",
 										data->nbr_of_meals);
 					pthread_mutex_unlock(&data->print_mutex);
 					pthread_mutex_unlock(&data->dead_mutex);
