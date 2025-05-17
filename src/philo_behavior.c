@@ -3,6 +3,11 @@
 int	philo_behavior(t_philo *philo, char *action)
 {
 	pthread_mutex_lock(&philo->data->print_mutex);
+	if (behavior_prevention(philo, &(unsigned int){0}, &(unsigned int){0}))
+	{
+		pthread_mutex_unlock(&philo->data->print_mutex);
+		return (1);
+	}	
 	printf("Philosopher [%d] %s!\n", philo->id, action);
 	pthread_mutex_unlock(&philo->data->print_mutex);
 	return (0);
