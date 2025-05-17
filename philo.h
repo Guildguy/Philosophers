@@ -48,5 +48,5 @@ void	*monitor_routine(void *arg);
 /////philo_behavior
 int		behavior_prevention(t_philo *philo, unsigned int *l_fork,
 			unsigned int *r_fork);
-int		philo_behavior(t_philo *philo, char *action);
+void	philo_behavior(t_philo *philo, char *action);
 #endif
