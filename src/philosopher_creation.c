@@ -69,7 +69,7 @@ static void	*philo_create(void *arg)
 				% philo->data->nbr_of_philos]); //inicio garfo direito
 			right_fork = 1;
 			if (behavior_prevention(philo, &left_fork, &right_fork))
-					break ;
+				break ;
 /********************************************************************************/
 			philo_behavior(philo, "has taken a right fork!");
 /********************************************************************************/
@@ -77,7 +77,7 @@ static void	*philo_create(void *arg)
 					(&philo->data->forks[philo->id - 1]); //inicio garfo esquerdo
 			left_fork = 1;
 			if (behavior_prevention(philo, &left_fork, &right_fork))
-					break ;
+				break ;
 /********************************************************************************/
 			philo_behavior(philo, "has taken a left fork!");
 /********************************************************************************/
