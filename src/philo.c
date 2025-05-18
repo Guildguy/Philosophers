@@ -18,7 +18,6 @@ int	main(int c, char **v)
 		free_all(&data);
 		return (1);
 	}
-	philo_wait(&data);
 	free_all(&data);
 	return (0);
 }
