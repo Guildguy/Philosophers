@@ -11,6 +11,7 @@ int	behavior_prevention(t_philo *philo, unsigned int *l_fork,
 		if (*r_fork)
 			pthread_mutex_unlock(&philo->data->forks[philo->id
 				% philo->data->nbr_of_philos]);
+		pthread_mutex_unlock(&philo->data->dead_mutex);
 		return (1);
 	}
 	pthread_mutex_unlock(&philo->data->dead_mutex);
