@@ -19,13 +19,13 @@ static void	safe_usleep(unsigned long duration, t_philo *philo)
 		if (philo->data->is_dead || philo->data->ate_enough)
 		{
 			pthread_mutex_unlock(&philo->data->dead_mutex);
-			break ;
+			return ;
 		}
 		pthread_mutex_unlock(&philo->data->dead_mutex);
 		if (get_time() - start >= duration)
-			break ;
-		usleep(1000);
-    }
+			return ;
+		usleep(500);
+	}
 }
 
 static void	*philo_create(void *arg)
@@ -46,7 +46,7 @@ static void	*philo_create(void *arg)
 			pthread_mutex_lock
 					(&philo->data->forks[philo->id - 1]); //inicio garfo esquerdo
 			left_fork = 1;
-			if(behavior_prevention(philo, &left_fork, &right_fork))
+			if (behavior_prevention(philo, &left_fork, &right_fork))
 				break ;
 /********************************************************************************/
 			philo_behavior(philo, "has taken a left fork");
@@ -57,7 +57,6 @@ static void	*philo_create(void *arg)
 			right_fork = 1;
 			if (behavior_prevention(philo, &left_fork, &right_fork))
 					break ;
-			pthread_mutex_unlock(&philo->data->dead_mutex);
 /********************************************************************************/
 			philo_behavior(philo, "has taken a right fork!");
 /********************************************************************************/
@@ -97,6 +96,8 @@ static void	*philo_create(void *arg)
 			if (behavior_prevention(philo, &left_fork, &right_fork))
 				break ;
 			pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
+			if (behavior_prevention(philo, &left_fork, &right_fork))
+				break;
 			philo_behavior(philo, "released the left fork!");
 		}
 /********************************************************************************/
@@ -106,6 +107,8 @@ static void	*philo_create(void *arg)
 				break ;
 			pthread_mutex_unlock(&philo->data->forks[philo->id
 				% philo->data->nbr_of_philos]);
+			if (behavior_prevention(philo, &left_fork, &right_fork))
+				break;
 			philo_behavior(philo, "released the right fork!");
 		}
 		right_fork = 0;
@@ -165,7 +168,7 @@ void	*monitor_routine(void *arg)
 					data->ate_enough = 1;
 					pthread_mutex_lock(&data->print_mutex);
 					printf("philosophers ate %u times!\n",
-										data->nbr_of_meals);
+									 data->nbr_of_meals);
 					pthread_mutex_unlock(&data->print_mutex);
 					pthread_mutex_unlock(&data->dead_mutex);
 					return (NULL);
@@ -183,7 +186,7 @@ void	*monitor_routine(void *arg)
 			pthread_mutex_unlock(&data->dead_mutex);
 			i++;
 		}
-		usleep(1000);
+		usleep(500);
 	}
 	return (NULL);
 }
@@ -263,5 +266,6 @@ int	philo_creation(t_data *data)
 		}
 		i++;
 	}
+	philo_wait(data);
 	return (0);
 }
