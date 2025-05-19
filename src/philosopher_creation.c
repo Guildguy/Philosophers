@@ -50,8 +50,8 @@ static void	*philo_create(void *arg)
 			break ;
 		if (behavior_prevention(philo, &left_fork, &right_fork))
 			break ;
-		philo_behavior(philo, "is sleeping!");
-		safe_usleep(philo->data->time_to_sleep, philo);
+		if (sleep_time(philo, &left_fork, &right_fork))	
+			break ;
 		if (behavior_prevention(philo, &left_fork, &right_fork))
 			break ;
 		philo_behavior(philo, "is thinking!");
