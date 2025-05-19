@@ -24,3 +24,15 @@ void	philo_behavior(t_philo *philo, char *action)
 	printf("Philosopher [%d] %s!\n", philo->id, action);
 	pthread_mutex_unlock(&philo->data->print_mutex);
 }
+
+int	eat_time(t_philo *philo, unsigned int *left_fork,
+		unsigned int *right_fork)
+{
+	if (behavior_prevention(philo, left_fork, right_fork))
+		return (1);
+	philo_behavior(philo, "is eating!");
+	philo->last_meal = get_time();
+	philo->meals++;
+	safe_usleep(philo->data->time_to_eat, philo);
+	return (0);
+}
