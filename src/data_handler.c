@@ -28,6 +28,45 @@ void	safe_usleep(unsigned long duration, t_philo *philo)
 	}
 }
 
+int	parse_args(t_data *data, int c, char *v[])
+{
+	data->nbr_of_philos = atoi(v[1]);
+	data->time_to_die = atoi(v[2]);
+	data->time_to_eat = atoi(v[3]);
+	data->time_to_sleep = atoi(v[4]);
+	if (c == 6)
+		data->nbr_of_meals = atoi(v[5]);
+	else
+		data->nbr_of_meals = 0;
+}
+
+int	create_resources(t_data *data)
+{
+	int	i;
+	data->philos = malloc(sizeof(t_philo) * data->nbr_of_philos);
+	data->threads = malloc(sizeof(pthread_t) * data->nbr_of_philos);
+	data->forks = malloc(sizeof(pthread_mutex_t) * data->nbr_of_philos);
+	if (!data->philos || !data->threads || !data->forks)
+	{
+		printf("Error: failure to allocate memory!\n");
+		free_all(data);
+		return (1);
+	}
+	i = 0;
+	while (i < data->nbr_of_philos)
+	{
+		if (pthread_mutex_init(&data->forks[i], NULL) != 0)
+		{
+			while (--i >= 0)
+				pthread_mutex_destroy(&data->forks[i]);
+			free_all(data);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
 void	free_all(t_data *data)
 {
 	int	i;
