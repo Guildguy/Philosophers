@@ -1,6 +1,6 @@
 #include "../philo.h"
 
-static long	get_time(void)
+long	get_time(void)
 {
 	struct timeval	time;
 
@@ -8,7 +8,7 @@ static long	get_time(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-static void	safe_usleep(unsigned long duration, t_philo *philo)
+void	safe_usleep(unsigned long duration, t_philo *philo)
 {
 	long	start;
 
@@ -40,35 +40,21 @@ static void	*philo_create(void *arg)
 	usleep(philo->id * 500);
 	while (6)
 	{
-//get fork time
 		if(take_fork(philo, &left_fork, &right_fork))
 			break ;
-//eat time
 		if (behavior_prevention(philo, &left_fork, &right_fork))
 			break ;
-/********************************************************************************/
-		philo_behavior(philo, "is eating!");
-/********************************************************************************/
-		philo->last_meal = get_time();
-		philo->meals++;
-		safe_usleep(philo->data->time_to_eat, philo);
-//release fork
+		if (eat_time(philo, &left_fork, &right_fork))
+			break ;
 		if (release_fork(philo, &left_fork, &right_fork))
 			break ;
-/********************************************************************************/
-//sleep time
 		if (behavior_prevention(philo, &left_fork, &right_fork))
 			break ;
-/********************************************************************************/
 		philo_behavior(philo, "is sleeping!");
-/*******************************************************************************/
 		safe_usleep(philo->data->time_to_sleep, philo);
-//think time
 		if (behavior_prevention(philo, &left_fork, &right_fork))
 			break ;
-/********************************************************************************/
 		philo_behavior(philo, "is thinking!");
-/********************************************************************************/
 	}
 	if (left_fork)
 		pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
