@@ -1,5 +1,20 @@
 #include "../philo.h"
 
+int	philo_behavior(t_philo *philo, char *action)
+{
+	pthread_mutex_lock(&philo->data->dead_mutex);
+	if (philo->data->is_dead || philo->data->ate_enough)
+	{
+		pthread_mutex_unlock(&philo->data->dead_mutex);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->data->dead_mutex);
+	pthread_mutex_lock(&philo->data->print_mutex);
+	printf("Philosopher [%d] %s!\n", philo->id, action);
+	pthread_mutex_unlock(&philo->data->print_mutex);
+	return (0);
+}
+
 int	behavior_prevention(t_philo *philo, unsigned int *left_fork,
 		unsigned int *right_fork)
 {
@@ -15,21 +30,6 @@ int	behavior_prevention(t_philo *philo, unsigned int *left_fork,
 		return (1);
 	}
 	pthread_mutex_unlock(&philo->data->dead_mutex);
-	return (0);
-}
-
-int	philo_behavior(t_philo *philo, char *action)
-{
-	pthread_mutex_lock(&philo->data->dead_mutex);
-	if (philo->data->is_dead || philo->data->ate_enough)
-	{
-		pthread_mutex_unlock(&philo->data->dead_mutex);
-		return (1);
-	}
-	pthread_mutex_unlock(&philo->data->dead_mutex);
-	pthread_mutex_lock(&philo->data->print_mutex);
-	printf("Philosopher [%d] %s!\n", philo->id, action);
-	pthread_mutex_unlock(&philo->data->print_mutex);
 	return (0);
 }
 
