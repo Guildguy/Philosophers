@@ -36,3 +36,13 @@ int	eat_time(t_philo *philo, unsigned int *left_fork,
 	safe_usleep(philo->data->time_to_eat, philo);
 	return (0);
 }
+
+int	sleep_time(t_philo *philo, unsigned int *left_fork,
+		unsigned int *right_fork)
+{
+	if (behavior_prevention(philo, left_fork, right_fork))
+		return (1) ;
+	philo_behavior(philo, "is sleeping!");
+	safe_usleep(philo->data->time_to_sleep, philo);
+	return (0);
+}
