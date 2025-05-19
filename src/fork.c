@@ -26,3 +26,39 @@ int	create_fork(t_data *data)
 	}
 	return (0);
 }
+
+int	take_fork(t_philo *philo, unsigned int *left_fork,
+		unsigned int *right_fork)
+{
+	if (philo->id % 2 == 0) //filos pares
+	{
+		pthread_mutex_lock
+				(&philo->data->forks[philo->id - 1]); //garfo esquerdo
+		*left_fork = 1;
+		if (behavior_prevention(philo, left_fork, right_fork))
+		return (1);
+		philo_behavior(philo, "has taken left fork!");
+		pthread_mutex_lock(&philo->data->forks[philo->id
+			% philo->data->nbr_of_philos]); //garfo direito
+		*right_fork = 1;
+		if (behavior_prevention(philo, left_fork, right_fork))
+		return (1);
+		philo_behavior(philo, "has taken right fork!");
+	}
+	else //filos impares
+	{
+		pthread_mutex_lock(&philo->data->forks[philo->id
+			% philo->data->nbr_of_philos]); //garfo direito
+		*right_fork = 1;
+		if (behavior_prevention(philo, left_fork, right_fork))
+		return (1);
+		philo_behavior(philo, "has taken right fork!");
+		pthread_mutex_lock
+				(&philo->data->forks[philo->id - 1]); //garfo esquerdo
+		*left_fork = 1;
+		if (behavior_prevention(philo, left_fork, right_fork))
+		return (1);
+		philo_behavior(philo, "has taken left fork!");
+	}
+	return (0);
+}
