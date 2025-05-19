@@ -62,3 +62,30 @@ int	take_fork(t_philo *philo, unsigned int *left_fork,
 	}
 	return (0);
 }
+
+int	release_fork(t_philo *philo, unsigned int *left_fork,
+		unsigned int *right_fork)
+{
+	if (*left_fork)
+	{
+		if (behavior_prevention(philo, left_fork, right_fork))
+			return (1);
+		pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
+		if (behavior_prevention(philo, left_fork, right_fork))
+			return (1);
+		philo_behavior(philo, "released left fork!");
+		*left_fork = 0;
+	}
+	if (*right_fork)
+	{
+		if (behavior_prevention(philo, left_fork, right_fork))
+			return (1);
+		pthread_mutex_unlock(&philo->data->forks[philo->id
+			% philo->data->nbr_of_philos]);
+		if (behavior_prevention(philo, left_fork, right_fork))
+			return (1);
+		philo_behavior(philo, "released right fork!");
+		*right_fork = 0;
+	}
+	return (0);
+}
