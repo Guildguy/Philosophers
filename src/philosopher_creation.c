@@ -220,10 +220,14 @@ int	init_data(t_data *data, int c, char **v)
 		data->nbr_of_meals = 0;
 	data->philos = malloc(sizeof(t_philo) * data->nbr_of_philos);
 	data->threads = malloc(sizeof(pthread_t) * data->nbr_of_philos);
-	data->forks = malloc(sizeof(pthread_mutex_t) * data->nbr_of_philos);
-	if (!data->philos || !data->threads || !data->forks)
+	if (!data->philos || !data->threads)
 	{
 		printf("Error: failure to allocate memory!\n");
+		free_all(data);
+		return (1);
+	}
+	if (create_fork(data) != 0)
+	{
 		free_all(data);
 		return (1);
 	}
