@@ -12,7 +12,7 @@ static void	*philo_create(void *arg)
 	usleep(philo->id * 500);
 	while (6)
 	{
-		if(take_fork(philo, &left_fork, &right_fork))
+		if (take_fork(philo, &left_fork, &right_fork))
 			break ;
 		if (eat_time(philo, &left_fork, &right_fork))
 			break ;
@@ -23,11 +23,7 @@ static void	*philo_create(void *arg)
 		if (think_time(philo, &left_fork, &right_fork))
 			break ;
 	}
-	if (left_fork)
-		pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
-	if (right_fork)
-		pthread_mutex_unlock(&philo->data->forks[philo->id
-			% philo->data->nbr_of_philos]);
+	cleanup_fork(philo, &left_fork, &right_fork);
 	return (NULL);
 }
 
@@ -101,49 +97,6 @@ void	philo_wait(t_data *data)
 		printf("Error: failure in wait the monitor!\n");
 }
 
-int	init_data(t_data *data, int c, char **v) 
-{
-	int	i;
-
-	data->nbr_of_philos = atoi(v[1]);
-	data->time_to_die = atoi(v[2]);
-	data->time_to_eat = atoi(v[3]);
-	data->time_to_sleep = atoi(v[4]);
-	if (c == 6)
-		data->nbr_of_meals = atoi(v[5]);
-	else
-		data->nbr_of_meals = 0;
-	data->philos = malloc(sizeof(t_philo) * data->nbr_of_philos);
-	data->threads = malloc(sizeof(pthread_t) * data->nbr_of_philos);
-	if (!data->philos || !data->threads)
-	{
-		printf("Error: failure to allocate memory!\n");
-		free_all(data);
-		return (1);
-	}
-	if (create_fork(data) != 0)
-	{
-		free_all(data);
-		return (1);
-	}
-	i = 0;
-	data->start_time = get_time();
-	data->is_dead = 0;
-	data->ate_enough = 0;
-	while (i < data->nbr_of_philos)
-	{
-		data->philos[i].id = i + 1;
-		data->philos[i].data = data;
-		data->philos[i].last_meal = data->start_time;
-		data->philos[i].meals = 0;
-		pthread_mutex_init(&data->forks[i], NULL);
-		i++;
-	}
-	pthread_mutex_init(&data->print_mutex, NULL);
-	pthread_mutex_init(&data->dead_mutex, NULL);
-	return (0);
-}
-
 int	philo_creation(t_data *data)
 {
 	int	i;
@@ -166,5 +119,45 @@ int	philo_creation(t_data *data)
 		i++;
 	}
 	philo_wait(data);
+	return (0);
+}
+
+static void	init_philo(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->nbr_of_philos)
+	{
+		data->philos[i].id = i + 1;
+		data->philos[i].data = data;
+		data->philos[i].last_meal = data->start_time;
+		data->philos[i].meals = 0;
+		i++;
+	}
+}
+
+int	init_data(t_data *data, int c, char **v) 
+{
+	if (parse_args(data, c, v))
+		return (1);
+	if (create_resources(data))
+		return (1);
+	data->start_time = get_time();
+	data->is_dead = 0;
+	data->ate_enough = 0;
+	init_philo(data);
+	if (pthread_mutex_init(&data->print_mutex, NULL) != 0)
+	{
+		printf("Error: failure to initialize print_mutex!\n");
+		free_all(data);
+		return (1);
+	}
+	if (pthread_mutex_init(&data->dead_mutex, NULL) != 0)
+	{
+		printf("Error: failure to initialize dead_mutex!\n");
+		free_all(data);
+		return (1);
+	}
 	return (0);
 }
