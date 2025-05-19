@@ -41,46 +41,8 @@ static void	*philo_create(void *arg)
 	while (6)
 	{
 //get fork time
-		if (philo->id % 2 == 0) //filos pares
-		{
-			pthread_mutex_lock
-					(&philo->data->forks[philo->id - 1]); //inicio garfo esquerdo
-			left_fork = 1;
-			if (behavior_prevention(philo, &left_fork, &right_fork))
-				break ;
-/********************************************************************************/
-			philo_behavior(philo, "has taken a left fork");
-/********************************************************************************/
-			pthread_mutex_lock
-				(&philo->data->forks[philo->id
-				% philo->data->nbr_of_philos]); //inicio garfo direito
-			right_fork = 1;
-			if (behavior_prevention(philo, &left_fork, &right_fork))
-					break ;
-/********************************************************************************/
-			philo_behavior(philo, "has taken a right fork!");
-/********************************************************************************/
-		}
-		else //filos impares
-		{
-			pthread_mutex_lock
-				(&philo->data->forks[philo->id
-				% philo->data->nbr_of_philos]); //inicio garfo direito
-			right_fork = 1;
-			if (behavior_prevention(philo, &left_fork, &right_fork))
-				break ;
-/********************************************************************************/
-			philo_behavior(philo, "has taken a right fork!");
-/********************************************************************************/
-			pthread_mutex_lock
-					(&philo->data->forks[philo->id - 1]); //inicio garfo esquerdo
-			left_fork = 1;
-			if (behavior_prevention(philo, &left_fork, &right_fork))
-				break ;
-/********************************************************************************/
-			philo_behavior(philo, "has taken a left fork!");
-/********************************************************************************/
-		}
+		if(take_fork(philo, &left_fork, &right_fork))
+			break ;
 //eat time
 		if (behavior_prevention(philo, &left_fork, &right_fork))
 			break ;
@@ -206,7 +168,7 @@ void	philo_wait(t_data *data)
 		printf("Error: failure in wait the monitor!\n");
 }
 
-int	init_data(t_data *data, int c, char **v)
+int	init_data(t_data *data, int c, char **v) 
 {
 	int	i;
 
