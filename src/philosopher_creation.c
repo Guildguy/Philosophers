@@ -53,28 +53,8 @@ static void	*philo_create(void *arg)
 		philo->meals++;
 		safe_usleep(philo->data->time_to_eat, philo);
 //release fork
-		if (left_fork)
-		{
-			if (behavior_prevention(philo, &left_fork, &right_fork))
-				break ;
-			pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
-			if (behavior_prevention(philo, &left_fork, &right_fork))
-				break;
-			philo_behavior(philo, "released the left fork!");
-		}
-/********************************************************************************/
-		if (right_fork)
-		{
-			if (behavior_prevention(philo, &left_fork, &right_fork))
-				break ;
-			pthread_mutex_unlock(&philo->data->forks[philo->id
-				% philo->data->nbr_of_philos]);
-			if (behavior_prevention(philo, &left_fork, &right_fork))
-				break;
-			philo_behavior(philo, "released the right fork!");
-		}
-		right_fork = 0;
-		left_fork = 0;
+		if (release_fork(philo, &left_fork, &right_fork))
+			break ;
 /********************************************************************************/
 //sleep time
 		if (behavior_prevention(philo, &left_fork, &right_fork))
