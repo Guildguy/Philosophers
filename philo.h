@@ -39,6 +39,8 @@ typedef struct s_data
 
 //src
 ////data_handler
+long	get_time(void);
+void	safe_usleep(unsigned long duration, t_philo *philo);
 void	free_all(t_data *data);
 ////philosopher_creation
 int		init_data(t_data *data, int c, char **v);
@@ -46,7 +48,19 @@ int		philo_creation(t_data *data);
 void	philo_wait(t_data *data);
 void	*monitor_routine(void *arg);
 /////philo_behavior
-int		behavior_prevention(t_philo *philo, unsigned int *l_fork,
-			unsigned int *r_fork);
-void	philo_behavior(t_philo *philo, char *action);
+int		behavior_prevention(t_philo *philo, unsigned int *left_fork,
+			unsigned int *right_fork);
+int		philo_behavior(t_philo *philo, char *action);
+int		eat_time(t_philo *philo, unsigned int *left_fork,
+			unsigned int *right_fork);
+int		sleep_time(t_philo *philo, unsigned int *left_fork,
+			unsigned int *right_fork);
+int		think_time(t_philo *philo, unsigned int *left_fork,
+		unsigned int *right_fork);
+////fork
+int		create_fork(t_data *data);
+int		take_fork(t_philo *philo, unsigned int *left_fork,
+			unsigned int *right_fork);
+int		release_fork(t_philo *philo, unsigned int *left_fork,
+			unsigned int *right_fork);
 #endif
