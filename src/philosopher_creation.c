@@ -2,9 +2,9 @@
 
 static void	*philo_create(void *arg)
 {
-	unsigned int	right_fork;
-	unsigned int	left_fork;
 	t_philo			*philo;
+	unsigned int	right_fork; 
+	unsigned int	left_fork;
 
 	right_fork = 0;
 	left_fork = 0;
@@ -14,19 +14,14 @@ static void	*philo_create(void *arg)
 	{
 		if(take_fork(philo, &left_fork, &right_fork))
 			break ;
-		if (behavior_prevention(philo, &left_fork, &right_fork))
-			break ;
 		if (eat_time(philo, &left_fork, &right_fork))
 			break ;
 		if (release_fork(philo, &left_fork, &right_fork))
 			break ;
-		if (behavior_prevention(philo, &left_fork, &right_fork))
-			break ;
 		if (sleep_time(philo, &left_fork, &right_fork))	
 			break ;
-		if (behavior_prevention(philo, &left_fork, &right_fork))
+		if (think_time(philo, &left_fork, &right_fork))
 			break ;
-		philo_behavior(philo, "is thinking!");
 	}
 	if (left_fork)
 		pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
