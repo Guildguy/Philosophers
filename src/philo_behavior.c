@@ -1,14 +1,14 @@
 #include "../philo.h"
 
-int	behavior_prevention(t_philo *philo, unsigned int *l_fork,
-		unsigned int *r_fork)
+int	behavior_prevention(t_philo *philo, unsigned int *left_fork,
+		unsigned int *right_fork)
 {
 	pthread_mutex_lock(&philo->data->dead_mutex);
 	if (philo->data->is_dead || philo->data->ate_enough)
 	{
-		if (*l_fork)
+		if (*left_fork)
 			pthread_mutex_unlock(&philo->data->forks[philo->id - 1]);
-		if (*r_fork)
+		if (*right_fork)
 			pthread_mutex_unlock(&philo->data->forks[philo->id
 				% philo->data->nbr_of_philos]);
 		pthread_mutex_unlock(&philo->data->dead_mutex);
