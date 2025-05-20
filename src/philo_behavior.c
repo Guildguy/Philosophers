@@ -39,10 +39,12 @@ int	behavior_prevention(t_philo *philo, unsigned int *left_fork,
 int	eat_time(t_philo *philo, unsigned int *left_fork,
 		unsigned int *right_fork)
 {
-	if (philo_behavior(philo, "is eating!"))
+	if (philo_behavior(philo, "is eating"))
 		return (1);
+	pthread_mutex_lock(&philo->data->dead_mutex);
 	philo->last_meal = get_time();
 	philo->meals++;
+	pthread_mutex_unlock(&philo->data->dead_mutex);
 	safe_usleep(philo->data->time_to_eat, philo);
 	return (0);
 }
@@ -50,7 +52,7 @@ int	eat_time(t_philo *philo, unsigned int *left_fork,
 int	sleep_time(t_philo *philo, unsigned int *left_fork,
 		unsigned int *right_fork)
 {
-	if (philo_behavior(philo, "is sleeping!"))
+	if (philo_behavior(philo, "is sleeping"))
 		return (1);
 	safe_usleep(philo->data->time_to_sleep, philo);
 	return (0);
@@ -59,5 +61,5 @@ int	sleep_time(t_philo *philo, unsigned int *left_fork,
 int	think_time(t_philo *philo, unsigned int *left_fork,
 		unsigned int *right_fork)
 {
-	return (philo_behavior(philo, "is thinking!"));
+	return (philo_behavior(philo, "is thinking"));
 }
