@@ -9,7 +9,6 @@ static void	*philo_create(void *arg)
 	right_fork = 0;
 	left_fork = 0;
 	philo = (t_philo *)arg;
-	usleep(philo->id * 500);
 	while (6)
 	{
 		if (take_fork(philo, &left_fork, &right_fork))
