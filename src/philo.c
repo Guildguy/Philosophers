@@ -2,8 +2,9 @@
 
 int	main(int c, char **v)
 {
-	t_data	data = {0};
+	t_data	data;
 
+	memset(&data, 0, sizeof(t_data));
 	if (c != 5 && c != 6)
 	{
 		printf(MSG);
