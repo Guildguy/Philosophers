@@ -12,6 +12,7 @@ static int	philo_status(t_data *data, unsigned int i,
 		return (1);
 	}
 	last_meal = data->philos[i].last_meal;
+	//printf("Philo %u: time since last meal = %ld\n", i + 1, get_time() - last_meal);
 	if (get_time() - last_meal >= data->time_to_die)
 	{
 		data->is_dead = 1;
@@ -32,6 +33,7 @@ void	*monitor_routine(void *arg)
 	unsigned int	meals_done;
 
 	data = (t_data *)arg;
+	usleep(100);
     while (6)
     {
         i = 0;
@@ -42,13 +44,13 @@ void	*monitor_routine(void *arg)
                 return (NULL);
             i++;
         }
-        if (meals_done)
+        if (meals_done && !data->is_dead)
         {
             data->ate_enough = 1;
             philo_behavior(&data->philos[0], "ate_enough");
             return (NULL);
         }
-        usleep(100);
+        usleep(5);
     }
     return (NULL);
 }
