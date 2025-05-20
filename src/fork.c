@@ -10,7 +10,7 @@ static int	pair_philo(t_philo *philo, unsigned int *left_fork,
 		return (1);
 	if (philo_behavior(philo, "has taken a left fork"))
 		return (1);
-	if (philo->data->nbr_of_philos = 1)
+	if (philo->data->nbr_of_philos == 1)
 		return (1);
 	pthread_mutex_lock(&philo->data->forks[philo->id
 		% philo->data->nbr_of_philos]);
