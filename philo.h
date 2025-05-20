@@ -48,7 +48,6 @@ void	free_all(t_data *data);
 int		init_data(t_data *data, int c, char **v);
 int		philo_creation(t_data *data);
 void	philo_wait(t_data *data);
-void	*monitor_routine(void *arg);
 /////philo_behavior
 int		philo_behavior(t_philo *philo, char *action);
 int		behavior_prevention(t_philo *philo, unsigned int *left_fork,
@@ -59,6 +58,8 @@ int		sleep_time(t_philo *philo, unsigned int *left_fork,
 			unsigned int *right_fork);
 int		think_time(t_philo *philo, unsigned int *left_fork,
 			unsigned int *right_fork);
+////philo_monitoring
+void	*monitor_routine(void *arg);
 ////fork
 int		take_fork(t_philo *philo, unsigned int *left_fork,
 			unsigned int *right_fork);
