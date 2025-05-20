@@ -2,19 +2,26 @@
 
 int	philo_behavior(t_philo *philo, char *action)
 {
+	if (!strcmp(action, "died") || !strcmp(action, "ate_enough"))
+	{
+		pthread_mutex_lock(&philo->data->print_mutex);
+		if (!strcmp(action, "ate_enough"))
+			printf("Philosophers ate %u times!\n", philo->data->nbr_of_meals);
+		else
+			printf("Philosopher [%d] %s!\n", philo->id, action);
+		pthread_mutex_unlock(&philo->data->print_mutex);
+		return (0);
+	}
 	pthread_mutex_lock(&philo->data->dead_mutex);
 	if (philo->data->is_dead || philo->data->ate_enough)
 	{
 		pthread_mutex_unlock(&philo->data->dead_mutex);
 		return (1);
 	}
-	pthread_mutex_unlock(&philo->data->dead_mutex);
 	pthread_mutex_lock(&philo->data->print_mutex);
-	if (strcmp(action, "ate_enough") == 0)
-		printf("Philosophers ate %u times!\n", philo->data->nbr_of_meals);
-	else
-		printf("Philosopher [%d] %s!\n", philo->id, action);
+	printf("Philosopher [%d] %s!\n", philo->id, action);
 	pthread_mutex_unlock(&philo->data->print_mutex);
+	pthread_mutex_unlock(&philo->data->dead_mutex);
 	return (0);
 }
 
