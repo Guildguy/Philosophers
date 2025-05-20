@@ -10,7 +10,7 @@ long	get_time(void)
 
 void	safe_usleep(unsigned long duration, t_philo *philo)
 {
-	long	start;
+	unsigned long	start;
 
 	start = get_time();
 	while (6)
@@ -28,41 +28,9 @@ void	safe_usleep(unsigned long duration, t_philo *philo)
 	}
 }
 
-int	parse_args(t_data *data, int c, char *v[])
-{
-	int	i;
-
-	i = 1;
-	while (i < c)
-	{
-		if (!v[i][0] || v[i][0] == '0' || atoi(v[i]) <= 0)
-		{
-			printf("Error: invalid arguments!\n");
-			return (1);
-		}
-		i++;
-	}
-	data->nbr_of_philos = atoi(v[1]);
-	data->time_to_die = atoi(v[2]);
-	data->time_to_eat = atoi(v[3]);
-	data->time_to_sleep = atoi(v[4]);
-	if (c == 6)
-		data->nbr_of_meals = atoi(v[5]);
-	else
-		data->nbr_of_meals = 0;
-	if (data->nbr_of_philos < 1 || data->time_to_die < 0
-		|| data->time_to_eat < 0 || data->time_to_sleep < 0
-		|| (c == 6 && data->nbr_of_meals <= 0))
-	{
-		printf("Error: invalid arguments!\n");
-		return (1);
-	}
-	return (0);
-}
-
 int	create_resources(t_data *data)
 {
-	int	i;
+	unsigned int	i;
 
 	data->philos = malloc(sizeof(t_philo) * data->nbr_of_philos);
 	data->threads = malloc(sizeof(pthread_t) * data->nbr_of_philos);
@@ -90,7 +58,7 @@ int	create_resources(t_data *data)
 
 void	free_all(t_data *data)
 {
-	int	i;
+	unsigned int	i;
 
 	if (data)
 	{
