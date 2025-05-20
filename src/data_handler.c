@@ -38,11 +38,13 @@ int	parse_args(t_data *data, int c, char *v[])
 		data->nbr_of_meals = atoi(v[5]);
 	else
 		data->nbr_of_meals = 0;
+	return (0);
 }
 
 int	create_resources(t_data *data)
 {
 	int	i;
+
 	data->philos = malloc(sizeof(t_philo) * data->nbr_of_philos);
 	data->threads = malloc(sizeof(pthread_t) * data->nbr_of_philos);
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->nbr_of_philos);
