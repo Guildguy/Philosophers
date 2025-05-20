@@ -2,10 +2,10 @@
 
 int	philo_behavior(t_philo *philo, char *action)
 {
-	if (!strcmp(action, "died") || !strcmp(action, "ate_enough"))
+	if (!ft_strcmp(action, "died") || !ft_strcmp(action, "ate_enough"))
 	{
 		pthread_mutex_lock(&philo->data->print_mutex);
-		if (!strcmp(action, "ate_enough"))
+		if (!ft_strcmp(action, "ate_enough"))
 			printf("Philosophers ate %u times!\n", philo->data->nbr_of_meals);
 		else
 			printf("Philosopher [%d] %s!\n", philo->id, action);
@@ -43,8 +43,7 @@ int	behavior_prevention(t_philo *philo, unsigned int *left_fork,
 	return (0);
 }
 
-int	eat_time(t_philo *philo, unsigned int *left_fork,
-		unsigned int *right_fork)
+int	eat_time(t_philo *philo)
 {
 	if (philo_behavior(philo, "is eating"))
 		return (1);
@@ -56,8 +55,7 @@ int	eat_time(t_philo *philo, unsigned int *left_fork,
 	return (0);
 }
 
-int	sleep_time(t_philo *philo, unsigned int *left_fork,
-		unsigned int *right_fork)
+int	sleep_time(t_philo *philo)
 {
 	if (philo_behavior(philo, "is sleeping"))
 		return (1);
@@ -65,8 +63,7 @@ int	sleep_time(t_philo *philo, unsigned int *left_fork,
 	return (0);
 }
 
-int	think_time(t_philo *philo, unsigned int *left_fork,
-		unsigned int *right_fork)
+int	think_time(t_philo *philo)
 {
 	return (philo_behavior(philo, "is thinking"));
 }

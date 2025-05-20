@@ -51,12 +51,9 @@ void	philo_wait(t_data *data);
 int		philo_behavior(t_philo *philo, char *action);
 int		behavior_prevention(t_philo *philo, unsigned int *left_fork,
 			unsigned int *right_fork);
-int		eat_time(t_philo *philo, unsigned int *left_fork,
-			unsigned int *right_fork);
-int		sleep_time(t_philo *philo, unsigned int *left_fork,
-			unsigned int *right_fork);
-int		think_time(t_philo *philo, unsigned int *left_fork,
-			unsigned int *right_fork);
+int		eat_time(t_philo *philo);
+int		sleep_time(t_philo *philo);
+int		think_time(t_philo *philo);
 ////philo_monitoring
 void	*monitor_routine(void *arg);
 ////fork
@@ -67,5 +64,6 @@ int		release_fork(t_philo *philo, unsigned int *left_fork,
 void	cleanup_fork(t_philo *philo, unsigned int *left_fork,
 			unsigned int *right_fork);
 ////philo_utils
+int		ft_strcmp(const char *s1, const char *s2);
 int		parse_args(t_data *data, int c, char *v[]);
 #endif

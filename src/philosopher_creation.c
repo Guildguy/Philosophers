@@ -13,13 +13,13 @@ static void	*philo_create(void *arg)
 	{
 		if (take_fork(philo, &left_fork, &right_fork))
 			break ;
-		if (eat_time(philo, &left_fork, &right_fork))
+		if (eat_time(philo))
 			break ;
 		if (release_fork(philo, &left_fork, &right_fork))
 			break ;
-		if (sleep_time(philo, &left_fork, &right_fork))
+		if (sleep_time(philo))
 			break ;
-		if (think_time(philo, &left_fork, &right_fork))
+		if (think_time(philo))
 			break ;
 	}
 	cleanup_fork(philo, &left_fork, &right_fork);
