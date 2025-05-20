@@ -58,7 +58,7 @@ int		eat_time(t_philo *philo, unsigned int *left_fork,
 int		sleep_time(t_philo *philo, unsigned int *left_fork,
 			unsigned int *right_fork);
 int		think_time(t_philo *philo, unsigned int *left_fork,
-		unsigned int *right_fork);
+			unsigned int *right_fork);
 ////fork
 int		take_fork(t_philo *philo, unsigned int *left_fork,
 			unsigned int *right_fork);
