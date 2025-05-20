@@ -5,7 +5,7 @@ SRC_DIR = src/
 OBJ_DIR = obj/
 
 SRC = 	$(SRC_DIR)/philosopher_creation.c $(SRC_DIR)/data_handler.c $(SRC_DIR)/philo.c \
-		$(SRC_DIR)/philo_behavior.c $(SRC_DIR)/fork.c
+		$(SRC_DIR)/philo_behavior.c $(SRC_DIR)/fork.c $(SRC_DIR)/philo_monitoring.c
 OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
 
 HEADER = philo.h
