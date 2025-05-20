@@ -10,7 +10,10 @@ int	philo_behavior(t_philo *philo, char *action)
 	}
 	pthread_mutex_unlock(&philo->data->dead_mutex);
 	pthread_mutex_lock(&philo->data->print_mutex);
-	printf("Philosopher [%d] %s!\n", philo->id, action);
+	if (strcmp(action, "ate_enough") == 0)
+		printf("Philosophers ate %u times!\n", philo->data->nbr_of_meals);
+	else
+		printf("Philosopher [%d] %s!\n", philo->id, action);
 	pthread_mutex_unlock(&philo->data->print_mutex);
 	return (0);
 }
