@@ -3,13 +3,16 @@
 static int	philo_status(t_data *data, unsigned int i,
 	unsigned int *meals_done)
 {
+	long	last_meal;
+
 	pthread_mutex_lock(&data->dead_mutex);
 	if (data->is_dead || data->ate_enough)
 	{
 		pthread_mutex_unlock(&data->dead_mutex);
 		return (1);
 	}
-	if (get_time() - data->philos[i].last_meal >= data->time_to_die)
+	last_meal = data->philos[i].last_meal;
+	if (get_time() - last_meal >= data->time_to_die)
 	{
 		data->is_dead = 1;
 		pthread_mutex_unlock(&data->dead_mutex);
@@ -45,7 +48,7 @@ void	*monitor_routine(void *arg)
             philo_behavior(&data->philos[0], "ate_enough");
             return (NULL);
         }
-        usleep(500);
+        usleep(100);
     }
     return (NULL);
 }
