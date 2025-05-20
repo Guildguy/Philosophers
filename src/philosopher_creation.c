@@ -3,7 +3,7 @@
 static void	*philo_create(void *arg)
 {
 	t_philo			*philo;
-	unsigned int	right_fork; 
+	unsigned int	right_fork;
 	unsigned int	left_fork;
 
 	right_fork = 0;
@@ -18,7 +18,7 @@ static void	*philo_create(void *arg)
 			break ;
 		if (release_fork(philo, &left_fork, &right_fork))
 			break ;
-		if (sleep_time(philo, &left_fork, &right_fork))	
+		if (sleep_time(philo, &left_fork, &right_fork))
 			break ;
 		if (think_time(philo, &left_fork, &right_fork))
 			break ;
@@ -59,7 +59,7 @@ void	*monitor_routine(void *arg)
 					data->ate_enough = 1;
 					pthread_mutex_lock(&data->print_mutex);
 					printf("philosophers ate %u times!\n",
-									 data->nbr_of_meals);
+						data->nbr_of_meals);
 					pthread_mutex_unlock(&data->print_mutex);
 					pthread_mutex_unlock(&data->dead_mutex);
 					return (NULL);
@@ -137,7 +137,7 @@ static void	init_philo(t_data *data)
 	}
 }
 
-int	init_data(t_data *data, int c, char **v) 
+int	init_data(t_data *data, int c, char **v)
 {
 	if (parse_args(data, c, v))
 		return (1);
