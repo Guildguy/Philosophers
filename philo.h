@@ -41,7 +41,6 @@ typedef struct s_data
 ////data_handler
 long	get_time(void);
 void	safe_usleep(unsigned long duration, t_philo *philo);
-int		parse_args(t_data *data, int c, char *v[]);
 int		create_resources(t_data *data);
 void	free_all(t_data *data);
 ////philosopher_creation
@@ -67,4 +66,6 @@ int		release_fork(t_philo *philo, unsigned int *left_fork,
 			unsigned int *right_fork);
 void	cleanup_fork(t_philo *philo, unsigned int *left_fork,
 			unsigned int *right_fork);
+////philo_utils
+int		parse_args(t_data *data, int c, char *v[]);
 #endif
