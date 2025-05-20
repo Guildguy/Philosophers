@@ -33,7 +33,7 @@ static int	odd_philo(t_philo *philo, unsigned int *left_fork,
 	if (philo_behavior(philo, "has taken a right fork"))
 		return (1);
 	if (philo->data->nbr_of_philos == 1)
-		rerurn (1);
+		return (1);
 	pthread_mutex_lock
 		(&philo->data->forks[philo->id - 1]);
 	*left_fork = 1;
