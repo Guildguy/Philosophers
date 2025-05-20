@@ -28,7 +28,7 @@ static void	*philo_create(void *arg)
 
 void	philo_wait(t_data *data)
 {
-	int	i;
+	unsigned int	i;
 
 	i = 0;
 	while (i < data->nbr_of_philos)
@@ -43,7 +43,7 @@ void	philo_wait(t_data *data)
 
 int	philo_creation(t_data *data)
 {
-	int	i;
+	unsigned int	i;
 
 	if (pthread_create(&data->monitor, NULL, monitor_routine, data) != 0)
 	{
@@ -68,7 +68,7 @@ int	philo_creation(t_data *data)
 
 static void	init_philo(t_data *data)
 {
-	int	i;
+	unsigned int	i;
 
 	i = 0;
 	while (i < data->nbr_of_philos)
